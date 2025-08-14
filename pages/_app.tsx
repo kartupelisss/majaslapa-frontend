@@ -1,16 +1,18 @@
-import '../styles/globals.css';
-import type { AppProps } from 'next/app';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+// pages/_app.tsx
+import type { AppProps } from "next/app";
+import "@/styles/globals.css";
+import { Inter } from "next/font/google";
 
-function MyApp({ Component, pageProps }: AppProps) {
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <>
-      <Navbar />
+    <main className={inter.className}>
       <Component {...pageProps} />
-      <Footer />
-    </>
+    </main>
   );
 }
-
-export default MyApp;
