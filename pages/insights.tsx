@@ -1,52 +1,45 @@
-import Link from "next/link"
-import type { GetServerSideProps } from "next"
+// pages/insights.tsx
+import Head from "next/head";
+import Link from "next/link";
+import { insights } from "../lib/insightsData";
 
-type Post = { id: string; title: string; slug: string; excerpt: string | null }
-type Props = { posts: Post[] }
-
-export default function InsightsPage({ posts }: Props) {
+export default function InsightsIndex() {
   return (
-    <main className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Insights</h1>
-      {posts.length === 0 ? (
-        <p>Vēl nav neviena ieraksta.</p>
-      ) : (
-        <ul className="space-y-4">
-          {posts.map((p) => (
-            <li key={p.id} className="border p-4 rounded hover:shadow transition">
-              <Link href={`/insights/${p.slug}`}>
-                <h2 className="text-xl font-semibold hover:underline">{p.title}</h2>
-                {p.excerpt ? <p className="text-sm opacity-80">{p.excerpt}</p> : null}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </main>
-  )
-}
+    <>
+      <Head>
+        <title>Insights — Jurista birojs</title>
+        <meta name="description" content="Piezīmes par regulējumu, praksi un spriedumiem." />
+      </Head>
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const base = process.env.NEXT_PUBLIC_PAYLOAD_URL
-  if (!base) return { props: { posts: [] } }
+      <header className="border-b border-neutral-200">
+        <div className="mx-auto max-w-7xl px-6 py-5">
+          <Link href="/" className="text-sm text-neutral-600 hover:text-neutral-900">
+            ← Atpakaļ uz sākumu
+          </Link>
+        </div>
+      </header>
 
-  try {
-    const r = await fetch(`${base}/api/blog-posts?limit=20&sort=-publishedDate`)
-    if (!r.ok) return { props: { posts: [] } }
+      <main className="mx-auto max-w-7xl px-6 py-10">
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-neutral-900">Insights</h1>
+        <p className="mt-3 text-neutral-600">Īsas piezīmes par regulējumu, praksi un spriedumiem.</p>
 
-    // Skaidri tipi, bez `any`
-    type BlogDoc = { id: string; title: string; slug: string; excerpt?: string | null }
-    type ApiResp = { docs: BlogDoc[] }
-
-    const data: ApiResp = await r.json()
-    const posts: Post[] = (data?.docs ?? []).map((d) => ({
-      id: d.id,
-      title: d.title,
-      slug: d.slug,
-      excerpt: d.excerpt ?? null, // ← NEKAD `undefined`
-    }))
-    return { props: { posts } }
-  } catch {
-    return { props: { posts: [] } }
-  }
+        {insights.length === 0 ? (
+          <p className="mt-10 text-neutral-600">Vēl nav neviena ieraksta.</p>
+        ) : (
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {insights.map((p) => (
+              <article key={p.slug} className="rounded-2xl border border-neutral-200 bg-white p-6">
+                <div className="text-xs text-neutral-500">{p.date}</div>
+                <h3 className="mt-2 text-lg font-semibold leading-snug text-neutral-900">{p.title}</h3>
+                <p className="mt-2 text-sm text-neutral-600">{p.excerpt}</p>
+                <Link href={`/insights/${p.slug}`} className="mt-4 inline-block text-sm underline underline-offset-4">
+                  Lasīt vairāk
+                </Link>
+              </article>
+            ))}
+          </div>
+        )}
+      </main>
+    </>
+  );
 }
