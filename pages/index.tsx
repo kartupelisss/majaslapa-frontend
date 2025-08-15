@@ -1,6 +1,7 @@
 // pages/index.tsx
 import Head from "next/head";
 import Link from "next/link";
+import BrandMark from "../components/ui/BrandMark";
 
 export default function Home() {
   return (
@@ -19,15 +20,10 @@ export default function Home() {
         <meta property="og:type" content="website" />
       </Head>
 
-      {/* Header */}
+      {/* Header ar logo (tikai šajā lapā) */}
       <header className="border-b border-neutral-200">
         <div className="mx-auto max-w-7xl px-6 py-5 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-xl border border-neutral-200 flex items-center justify-center text-[11px] font-semibold">
-              JB
-            </div>
-            <span className="text-sm font-medium tracking-tight">Jurista birojs · Tax</span>
-          </Link>
+          <BrandMark />
 
           <nav className="hidden md:flex items-center gap-8 text-sm">
             <Link className="hover:opacity-80" href="/insights">Insights</Link>
@@ -49,7 +45,6 @@ export default function Home() {
       <section>
         <div className="mx-auto max-w-7xl px-6 pt-20 pb-8 lg:pt-28">
           <div className="max-w-6xl">
-            {/* DIVAS rindas, BEZ “:” */}
             <h1
               className="
                 text-[38px] md:text-[52px] lg:text-[64px]
@@ -145,7 +140,7 @@ export default function Home() {
           </div>
 
           <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1,2,3].map((i) => (
+            {[1, 2, 3].map((i) => (
               <article key={i} className="rounded-2xl border border-neutral-200 bg-white p-6">
                 <div className="text-xs text-neutral-500">2025-08-01</div>
                 <h3 className="mt-2 text-[17px] font-semibold leading-snug text-neutral-900">
