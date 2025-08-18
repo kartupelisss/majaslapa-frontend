@@ -106,15 +106,6 @@ function PakalpojumiInteractive() {
 }
 
 export default function Home() {
-  // Sticky header krāsas maiņa uz scroll
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll(); // sākotnējais stāvoklis
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
     <>
       <Head>
@@ -124,19 +115,15 @@ export default function Home() {
           content="Stratēģiskas nodokļu konsultācijas ar juridisko precizitāti un finanšu domāšanu. Latvijā un pārrobežu darījumos."
         />
         <meta property="og:title" content="Nodokļu risinājumi ar precizitāti — Jurista birojs" />
-        <meta property="og:description" content="Stratēģiskas nodokļu konsultācijas ar juridisko precizitāti un finanšu domāšanu." />
+        <meta
+          property="og:description"
+          content="Stratēģiskas nodokļu konsultācijas ar juridisko precizitāti un finanšu domāšanu."
+        />
         <meta property="og:type" content="website" />
       </Head>
 
-      {/* Sticky Header */}
-      <header
-        className={[
-          "sticky top-0 z-50 border-b transition-colors duration-300",
-          scrolled
-            ? "bg-neutral-900/95 text-white border-neutral-800 shadow-sm"
-            : "bg-white/80 text-neutral-900 border-neutral-200 backdrop-blur"
-        ].join(" ")}
-      >
+      {/* Sticky Header (nemaina krāsu scrollojot) */}
+      <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/80 backdrop-blur">
         <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
           <BrandMark />
 
@@ -149,12 +136,7 @@ export default function Home() {
 
           <Link
             href="/contact"
-            className={[
-              "inline-flex items-center rounded-full px-4 py-2 text-sm transition",
-              scrolled
-                ? "bg-white text-neutral-900 hover:opacity-90"
-                : "border border-neutral-200 hover:bg-neutral-50"
-            ].join(" ")}
+            className="inline-flex items-center rounded-full border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50"
           >
             Sazināties
           </Link>
