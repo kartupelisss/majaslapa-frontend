@@ -30,7 +30,7 @@ export default function InsightsIndex() {
             {insights.map((p) => (
               <article key={p.slug} className="rounded-2xl border border-neutral-200 bg-white p-6">
                 <div className="text-xs text-neutral-500">{p.date}</div>
-                <h3 className="mt-2 text-lg font-semibold leading-snug text-neutral-900">{p.title}</h3>
+                <h3 className="mt-2 text-[17px] font-semibold leading-snug text-neutral-900">{p.title}</h3>
                 <p className="mt-2 text-sm text-neutral-600">{p.excerpt}</p>
                 <Link href={`/insights/${p.slug}`} className="mt-4 inline-block text-sm underline underline-offset-4">
                   Lasīt vairāk

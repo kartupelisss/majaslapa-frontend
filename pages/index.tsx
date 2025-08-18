@@ -1,7 +1,109 @@
 // pages/index.tsx
 import Head from "next/head";
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import BrandMark from "../components/ui/BrandMark";
+
+/** Mini-komponents: interaktīvā Pakalpojumu sadaļa (paliek uz tās pašas lapas) */
+function PakalpojumiInteractive() {
+  const services = useMemo(
+    () => [
+      {
+        slug: "stridi-un-parbaudes",
+        title: "Strīdi un pārbaudes",
+        excerpt: "Pārstāvība VID un tiesās — no skaidrojumiem līdz apelācijām.",
+        bullets: ["Pārsūdzības un paskaidrojumi", "Procesa stratēģija", "Judikatūras izmantošana"],
+      },
+      {
+        slug: "pvn-un-parrobezu-darijumi",
+        title: "PVN un pārrobežu darījumi",
+        excerpt: "Drošas ķēdes, reģistrācijas, rēķini, atbilstība jurisdikcijās.",
+        bullets: ["OSS/IOSS, PVN reģistrācijas", "Piegādes vietas noteikšana", "Dokumentēšana un pierādījumi"],
+      },
+      {
+        slug: "transfercenu-politika",
+        title: "Transfercenu politika",
+        excerpt: "Struktūra, dokumentācija un audits saskaņā ar OECD vadlīnijām.",
+        bullets: ["Master/Local File minimums", "Salīdzināmo izvēle un metodes", "Dokumentācija gatavībai auditam"],
+      },
+      {
+        slug: "ieturejuma-nodokli",
+        title: "Ieturējuma nodokļi",
+        excerpt: "Līgumu struktūras, atvieglojumi un dokumentu noformēšana.",
+        bullets: ["Rezidences sertifikāti", "Peļņas izmaksu guvumi", "Atbrīvojumu plānošana"],
+      },
+      {
+        slug: "restrukturizacija",
+        title: "Restrukturizācija",
+        excerpt: "Nodokļu ietekmes izvērtēšana uzņēmumu jaunajā jurisdikcijā.",
+        bullets: ["Darījumu kartēšana", "Riska analīze", "Pārejas lēmumi"],
+      },
+      {
+        slug: "es-oecd-prakse",
+        title: "ES/OECD prakse",
+        excerpt: "Atbilstība direktīvām, vadlīnijām un jaunajai judikatūrai.",
+        bullets: ["Direktīvu transponēšana", "Valdību pieteikumi", "Tiesu prakses monitorings"],
+      },
+    ],
+    []
+  );
+
+  const [active, setActive] = useState<string>(services[0].slug);
+  const current = services.find((s) => s.slug === active) ?? services[0];
+
+  useEffect(() => {
+    // Dalīties ar tiešo skatu (#pakalpojumi-<slug>) bez pārlādes
+    history.replaceState(null, "", `#pakalpojumi-${active}`);
+  }, [active]);
+
+  return (
+    <div className="mt-10 grid gap-6 md:grid-cols-[minmax(260px,360px)_1fr]">
+      {/* Kreisā kolonna — vertikāls saraksts */}
+      <nav aria-label="Pakalpojumu saraksts" className="space-y-2 rounded-2xl border border-neutral-200 p-2 bg-white">
+        {services.map((s) => {
+          const isActive = s.slug === active;
+          return (
+            <button
+              key={s.slug}
+              onClick={() => setActive(s.slug)}
+              className={[
+                "w-full text-left rounded-xl px-3 py-3 transition",
+                isActive ? "bg-neutral-100 ring-1 ring-neutral-900/10" : "hover:bg-neutral-50",
+              ].join(" ")}
+              aria-current={isActive ? "true" : undefined}
+            >
+              <span className="font-medium">{s.title}</span>
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* Labā kolonna — mainīgā kartīte */}
+      <div className="rounded-2xl border border-neutral-200 p-6 bg-white">
+        <h3 className="text-2xl font-semibold">{current.title}</h3>
+        <p className="mt-1 text-sm text-neutral-600">{current.excerpt}</p>
+
+        <ul className="mt-6 space-y-2 pl-1">
+          {current.bullets.map((b, i) => (
+            <li key={i} className="flex items-start gap-2">
+              <span className="mt-1">•</span>
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-8">
+          <Link
+            href="/contact"
+            className="inline-flex items-center rounded-full px-4 py-2 text-sm font-medium border border-neutral-200 hover:bg-neutral-50"
+          >
+            Uzzināt vairāk →
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
@@ -27,7 +129,8 @@ export default function Home() {
 
           <nav className="hidden md:flex items-center gap-8 text-sm">
             <Link className="hover:opacity-80" href="/insights">Insights</Link>
-            <Link className="hover:opacity-80" href="/services">Services</Link>
+            {/* /services -> uz mājas lapas sadaļu */}
+            <Link className="hover:opacity-80" href="/#pakalpojumi">Services</Link>
             <Link className="hover:opacity-80" href="/about">About</Link>
             <Link className="hover:opacity-80" href="/contact">Contact</Link>
           </nav>
@@ -45,17 +148,9 @@ export default function Home() {
       <section>
         <div className="mx-auto max-w-7xl px-6 pt-20 pb-8 lg:pt-28">
           <div className="max-w-6xl">
-            <h1
-              className="
-                text-[38px] md:text-[52px] lg:text-[64px]
-                font-medium tracking-tight leading-[1.06]
-                text-neutral-900
-              "
-            >
+            <h1 className="text-[38px] md:text-[52px] lg:text-[64px] font-medium tracking-tight leading-[1.06] text-neutral-900">
               <span className="block">Skaldi sarežģīto vienkāršos soļos</span>
-              <span className="block md:whitespace-nowrap">
-                Augstas klases nodokļu risinājumi
-              </span>
+              <span className="block md:whitespace-nowrap">Augstas klases nodokļu risinājumi</span>
             </h1>
 
             <p className="mt-6 max-w-2xl text-[18px] leading-relaxed text-neutral-500">
@@ -70,7 +165,7 @@ export default function Home() {
               >
                 Iesākt sarunu
                 <svg className="ml-2 h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden>
-                  <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </Link>
               <Link
@@ -97,37 +192,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services */}
-      <section className="border-t border-neutral-200">
+      {/* Pakalpojumi (aizstāj iepriekšējo “Mūsu fokuss”) */}
+      <section id="pakalpojumi" className="border-t border-neutral-200">
         <div className="mx-auto max-w-7xl px-6 py-16">
           <div className="max-w-3xl">
-            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900">Mūsu fokuss</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900">Pakalpojumi</h2>
             <p className="mt-3 text-neutral-500">
-              Praktiski un droši nodokļu risinājumi, pielāgoti biznesa realitātei.
+              Konsultējam un pārstāvam nodokļu jautājumos — no ikdienas PVN situācijām līdz sarežģītiem
+              pārrobežu darījumiem un strīdiem ar VID.
             </p>
           </div>
 
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { title: "Transfertcenu politika", text: "Struktūra, dokumentācija un audits saskaņā ar OECD vadlīnijām." },
-              { title: "PVN un pārrobežu darījumi", text: "Drošas ķēdes, reģistrācijas, rēķini, atbilstība jurisdikcijās." },
-              { title: "Strīdi un pārbaudes", text: "Pārstāvība VID un tiesās — no skaidrojumiem līdz apelācijām." },
-            ].map((c) => (
-              <div key={c.title} className="rounded-2xl border border-neutral-200 p-6 bg-white">
-                <h3 className="text-lg font-semibold text-neutral-900">{c.title}</h3>
-                <p className="mt-2 text-sm text-neutral-500">{c.text}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-10">
-            <Link
-              href="/services"
-              className="inline-flex items-center rounded-full px-4 py-2 text-sm font-medium border border-neutral-200 hover:bg-neutral-50"
-            >
-              Visi pakalpojumi
-            </Link>
-          </div>
+          <PakalpojumiInteractive />
         </div>
       </section>
 

@@ -14,25 +14,16 @@ export default function AboutPage() {
         />
       </Head>
 
-      {/* Augšējā josla */}
       <header className="border-b border-neutral-200">
-        <div className="mx-auto max-w-7xl px-6 py-5 flex items-center justify-between">
+        <div className="mx-auto max-w-7xl px-6 py-5">
           <Link href="/" className="text-sm text-neutral-600 hover:text-neutral-900">
             ← Atpakaļ uz sākumu
-          </Link>
-          <Link
-            href="/contact"
-            className="hidden md:inline-flex items-center rounded-full border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50"
-          >
-            Sazināties
           </Link>
         </div>
       </header>
 
       <main className="mx-auto max-w-7xl px-6 py-12 lg:py-14">
-        {/* Hero: saturs + foto vietturis */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-          {/* LEFT */}
           <div>
             <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-neutral-900">
               Par juristu
@@ -44,24 +35,14 @@ export default function AboutPage() {
               finanšu un vadības komandām.
             </p>
 
-            {/* “Badges” */}
             <div className="mt-5 flex flex-wrap gap-2">
-              {[
-                "15+ gadu pieredze",
-                "OECD/ES prakse",
-                "VID un tiesvedība",
-                "PVN · transfertcenas",
-              ].map((t) => (
-                <span
-                  key={t}
-                  className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-700"
-                >
+              {["15+ gadu pieredze", "OECD/ES prakse", "VID un tiesvedība", "PVN · transfertcenas"].map((t) => (
+                <span key={t} className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-700">
                   {t}
                 </span>
               ))}
             </div>
 
-            {/* Ikonu saraksts */}
             <ul className="mt-8 space-y-3">
               {[
                 "Nodokļu konsultācijas un tiesvedība ar konsekventu rezultātu piegādi.",
@@ -75,7 +56,6 @@ export default function AboutPage() {
               ))}
             </ul>
 
-            {/* Citāts */}
             <figure className="mt-8 rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
               <div className="flex gap-3 text-neutral-800">
                 <Quote className="h-5 w-5 mt-0.5 shrink-0" aria-hidden />
@@ -86,7 +66,6 @@ export default function AboutPage() {
               </div>
             </figure>
 
-            {/* Credentials */}
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="rounded-2xl border border-neutral-200 bg-white p-4">
                 <div className="text-sm font-medium text-neutral-900">Izglītība</div>
@@ -103,7 +82,6 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* CTA */}
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/contact"
@@ -111,22 +89,15 @@ export default function AboutPage() {
               >
                 Sazināties
               </Link>
-              <a
-                href="mailto:info@example.com"
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50"
-              >
+              <a href="mailto:info@example.com" className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50">
                 <Mail className="h-4 w-4" /> info@example.com
               </a>
-              <a
-                href="tel:+37120000000"
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50"
-              >
+              <a href="tel:+37120000000" className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50">
                 <Phone className="h-4 w-4" /> +371 20 000 000
               </a>
             </div>
           </div>
 
-          {/* RIGHT — foto vietturis */}
           <div className="relative">
             <div
               className="rounded-3xl border border-neutral-200 bg-neutral-100 h-[360px] md:h-[440px] lg:h-[520px]"
@@ -136,14 +107,12 @@ export default function AboutPage() {
                   "radial-gradient(600px 240px at 20% 0%, rgba(0,0,0,.04), transparent 60%)",
               }}
             />
-            {/* zem foto – maza piezīme */}
             <div className="mt-3 text-xs text-neutral-500">
               Foto vietturis — ieliksim reālu portretu vēlāk (1200×1500 ieteicams).
             </div>
           </div>
         </section>
 
-        {/* Neliela horizontāla līnija un “īsi fakti” */}
         <section className="mt-14 border-t border-neutral-200 pt-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[

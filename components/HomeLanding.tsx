@@ -1,6 +1,6 @@
 // components/HomeLanding.tsx
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,14 @@ type Insight = {
   slug?: string;
 };
 
+type Service = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  bullets: string[];
+  icon?: React.ReactNode;
+};
+
 export default function HomeLanding({ insights = [] as Insight[] }: { insights?: Insight[] }) {
   // Fallback dati, ja no CMS vēl nenāk saturs
   const fallback = useMemo<Insight[]>(
@@ -29,11 +37,68 @@ export default function HomeLanding({ insights = [] as Insight[] }: { insights?:
 
   const data = insights.length ? insights : fallback;
 
-  const services = [
-    { icon: <Scale size={24} aria-hidden />, title: "Nodokļu konsultācijas", desc: "PVN, UIN, starptautiskā plānošana, strukturēšana." },
-    { icon: <Building2 size={24} aria-hidden />, title: "Komerctiesības & M&A", desc: "Darījumu nodokļu ietekme, DD, optimāla struktūra." },
-    { icon: <FileText size={24} aria-hidden />, title: "Strīdi ar VID", desc: "Pārsūdzības, tiesvedība un pārstāvība procesos." },
+  // --- Pakalpojumu dati (vertikālais saraksts + detalizācija labajā pusē) ---
+  const services: Service[] = [
+    {
+      slug: "stridi-un-parbaudes",
+      title: "Strīdi un pārbaudes",
+      excerpt: "Pārstāvība VID un tiesās — no skaidrojumiem līdz apelācijām.",
+      bullets: ["Pārsūdzības un paskaidrojumi", "Procesa stratēģija", "Judikatūras izmantošana"],
+      icon: <FileText size={20} aria-hidden />,
+    },
+    {
+      slug: "pvn-un-parrobezu-darijumi",
+      title: "PVN un pārrobežu darījumi",
+      excerpt: "Drošas ķēdes, reģistrācijas, rēķini, atbilstība jurisdikcijās.",
+      bullets: ["OSS/IOSS, PVN reģistrācijas", "Piegādes vietas noteikšana", "Dokumentēšana un pierādījumi"],
+      icon: <Building2 size={20} aria-hidden />,
+    },
+    {
+      slug: "transfercenu-politika",
+      title: "Transfercenu politika",
+      excerpt: "Struktūra, dokumentācija un audits saskaņā ar OECD vadlīnijām.",
+      bullets: ["Master/Local File minimums", "Salīdzināmo izvēle un metodes", "Dokumentācija gatavībai auditam"],
+      icon: <Scale size={20} aria-hidden />,
+    },
+    {
+      slug: "ieturejuma-nodokli",
+      title: "Ieturējuma nodokļi",
+      excerpt: "Līgumu struktūras, atvieglojumi un dokumentu noformēšana.",
+      bullets: ["Rezidences sertifikāti", "Peļņas izmaksu guvumi", "Atbrīvojumu plānošana"],
+      icon: <FileText size={20} aria-hidden />,
+    },
+    {
+      slug: "restrukturizacija",
+      title: "Restrukturizācija",
+      excerpt: "Nodokļu ietekmes izvērtēšana uzņēmumu jaunajā jurisdikcijā.",
+      bullets: ["Darījumu kartēšana", "Riska analīze", "Pārejas lēmumi"],
+      icon: <Building2 size={20} aria-hidden />,
+    },
+    {
+      slug: "es-oecd-prakse",
+      title: "ES/OECD prakse",
+      excerpt: "Atbilstība direktīvām, vadlīnijām un jaunajai judikatūrai.",
+      bullets: ["Direktīvu transponēšana", "Valdību pieteikumi", "Tiesu prakses monitorings"],
+      icon: <Scale size={20} aria-hidden />,
+    },
   ];
+
+  // sākotnējā izvēle – pēc hash (#pakalpojumi-<slug>) vai pirmā
+  const initialSlug = useMemo(() => {
+    if (typeof window === "undefined") return services[0].slug;
+    const h = window.location.hash.replace("#", "");
+    const fromHash = h?.startsWith("pakalpojumi-") ? h.replace("pakalpojumi-", "") : null;
+    return services.find((s) => s.slug === fromHash)?.slug ?? services[0].slug;
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const [active, setActive] = useState<string>(initialSlug);
+  const current = services.find((s) => s.slug === active) ?? services[0];
+
+  // URL hash atjaunošana, paliekot tajā pašā lapā
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    history.replaceState(null, "", `#pakalpojumi-${active}`);
+  }, [active]);
 
   // ---- Kontaktformas stāvoklis + submit handleris ----
   const [sending, setSending] = useState(false);
@@ -76,7 +141,8 @@ export default function HomeLanding({ insights = [] as Insight[] }: { insights?:
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm">
             <a className="hover:opacity-80 transition" href="#insights">Insights</a>
-            <a className="hover:opacity-80 transition" href="#services">Pakalpojumi</a>
+            {/* Enkurs uz JAUNO pakalpojumu sadaļu */}
+            <a className="hover:opacity-80 transition" href="#pakalpojumi">Pakalpojumi</a>
             <a className="hover:opacity-80 transition" href="#about">Par mums</a>
             <a className="hover:opacity-80 transition" href="#contact">Kontakti</a>
           </nav>
@@ -128,7 +194,7 @@ export default function HomeLanding({ insights = [] as Insight[] }: { insights?:
               ">15 gadu pieredze",
               "Regulāri pārstāvība VID un tiesās",
               "ES un OECD prakses skatījums",
-              "Klienti: ražošana, e‑komercija, HoReCa, finanses",
+              "Klienti: ražošana, e-komercija, HoReCa, finanses",
             ].map((t, i) => (
               <div key={i} className="border-l pl-4">{t}</div>
             ))}
@@ -177,34 +243,74 @@ export default function HomeLanding({ insights = [] as Insight[] }: { insights?:
         </div>
       </section>
 
-      {/* Services */}
-      <section id="services" className="border-t">
+      {/* Pakalpojumi (JAUNA FUNKCIJA: vertikāls saraksts + mainīga kartīte) */}
+      <section id="pakalpojumi" className="border-t">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-          <div className="flex items-end justify-between gap-6">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Pakalpojumi</h2>
-              <p className="mt-1 text-neutral-600">Fokuss uz rezultātu un skaidru komunikāciju.</p>
-            </div>
-            <Button variant="outline">
-              <Link href="/services" className="inline-block">Apskatīt visus</Link>
-            </Button>
+          <div className="mb-6">
+            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">Pakalpojumi</h2>
+            <p className="mt-1 text-neutral-600">
+              Konsultējam un pārstāvam nodokļu jautājumos — no ikdienas PVN situācijām līdz sarežģītiem
+              pārrobežu darījumiem un strīdiem ar VID.
+            </p>
           </div>
 
-          <div className="mt-8 grid md:grid-cols-3 gap-6">
-            {services.map((s, i) => (
-              <Card key={i} className="rounded-2xl h-full">
-                <CardHeader className="flex flex-row items-center gap-3">
-                  <div className="p-2 rounded-xl bg-neutral-100">{s.icon}</div>
-                  <CardTitle className="text-base font-semibold tracking-tight">{s.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-neutral-700">{s.desc}</p>
-                  <Link href="/services" className="inline-block mt-2 text-sm underline">
-                    Uzzināt vairāk
-                  </Link>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid gap-6 md:grid-cols-[minmax(260px,360px)_1fr]">
+            {/* Kreisā kolonna: vertikāls saraksts */}
+            <nav aria-label="Pakalpojumu saraksts" className="space-y-2 rounded-2xl border p-2">
+              {services.map((s) => {
+                const isActive = s.slug === active;
+                return (
+                  <button
+                    key={s.slug}
+                    onClick={() => setActive(s.slug)}
+                    className={[
+                      "w-full text-left rounded-xl px-3 py-3 transition",
+                      "flex items-center gap-3",
+                      isActive ? "bg-neutral-100 ring-1 ring-neutral-900/10" : "hover:bg-neutral-50",
+                    ].join(" ")}
+                    aria-current={isActive ? "true" : undefined}
+                  >
+                    <span className="shrink-0">{s.icon ?? <FileText size={20} aria-hidden />}</span>
+                    <span className="font-medium">{s.title}</span>
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* Labā kolonna: mainīgā kartīte */}
+            <Card className="rounded-2xl">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-3">
+                  <div className="mt-1">{current.icon ?? <FileText size={20} aria-hidden />}</div>
+                  <div>
+                    <h3 className="text-2xl font-semibold">{current.title}</h3>
+                    <p className="mt-1 text-sm text-neutral-600">{current.excerpt}</p>
+                  </div>
+                </div>
+
+                <ul className="mt-6 space-y-2 pl-1">
+                  {current.bullets.map((b, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <span className="mt-1">•</span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-8">
+                  {/* Paliekam lapā — novelkam uz kontaktu */}
+                  <Button
+                    onClick={() => {
+                      const el = document.querySelector("#contact");
+                      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }}
+                    className="inline-flex items-center gap-2"
+                  >
+                    Uzzināt vairāk <span aria-hidden>→</span>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -246,7 +352,7 @@ export default function HomeLanding({ insights = [] as Insight[] }: { insights?:
                   <CardContent className="p-4 flex items-center gap-3 text-sm">
                     <Mail size={20} aria-hidden />
                     <div>
-                      <div className="font-medium">E‑pasts</div>
+                      <div className="font-medium">E-pasts</div>
                       <a href="mailto:info@juristibirojs.lv" className="text-neutral-600">info@juristibirojs.lv</a>
                     </div>
                   </CardContent>
@@ -271,7 +377,7 @@ export default function HomeLanding({ insights = [] as Insight[] }: { insights?:
                     <Input name="name" placeholder="Jānis Bērziņš" required />
                   </div>
                   <div>
-                    <label className="text-sm">E‑pasts</label>
+                    <label className="text-sm">E-pasts</label>
                     <Input name="email" type="email" placeholder="janis@uznemums.lv" required />
                   </div>
                   <div>

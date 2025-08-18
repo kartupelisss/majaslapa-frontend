@@ -5,12 +5,10 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import { useMemo, useState } from "react";
 import { insights, getInsightBySlug, type Insight } from "../../lib/insightsData";
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: insights.map((p) => ({ params: { slug: p.slug } })),
-    fallback: false, // visi raksti zināmi build laikā
-  };
-};
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: insights.map((p) => ({ params: { slug: p.slug } })),
+  fallback: false,
+});
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = params?.slug as string;
@@ -24,7 +22,7 @@ export default function InsightPage({ post }: { post: Insight }) {
 
   const minutes = useMemo(() => {
     const words = post.content.join(" ").trim().split(/\s+/).filter(Boolean).length;
-    return Math.max(1, Math.round(words / 200)); // ~200 wpm
+    return Math.max(1, Math.round(words / 200));
   }, [post]);
 
   async function copyLink() {
@@ -32,7 +30,7 @@ export default function InsightPage({ post }: { post: Insight }) {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-    } catch {/* ignore */}
+    } catch {}
   }
 
   const more = insights.filter((p) => p.slug !== post.slug).slice(0, 3);
@@ -40,24 +38,19 @@ export default function InsightPage({ post }: { post: Insight }) {
   return (
     <>
       <Head>
-        <title>{post.title} — Insights</title>
+        <title>{`${post.title} — Insights`}</title>
         <meta name="description" content={post.excerpt} />
       </Head>
 
-      {/* Augšējā josla */}
       <header className="border-b border-neutral-200">
-        <div className="mx-auto max-w-7xl px-6 py-5 flex items-center justify-between">
-          <Link href="/insights" className="text-sm text-neutral-600 hover:text-neutral-900">
-            ← Atpakaļ uz Insights
-          </Link>
-          <Link href="/" className="hidden md:inline text-sm text-neutral-600 hover:text-neutral-900">
-            ← Sākums
+        <div className="mx-auto max-w-7xl px-6 py-5">
+          <Link href="/" className="text-sm text-neutral-600 hover:text-neutral-900">
+            ← Atpakaļ uz sākumu
           </Link>
         </div>
       </header>
 
       <main className="mx-auto max-w-7xl px-6 py-10">
-        {/* HERO bloks */}
         <section className="max-w-3xl">
           <div className="flex items-center gap-3 text-xs text-neutral-500">
             <span>{post.date}</span>
@@ -71,9 +64,7 @@ export default function InsightPage({ post }: { post: Insight }) {
           <p className="mt-3 text-lg leading-relaxed text-neutral-600">{post.excerpt}</p>
         </section>
 
-        {/* Saturs ar sānu rīkjoslu */}
         <section className="mt-10 grid grid-cols-1 md:grid-cols-[1fr_min(65ch,100%)_1fr] gap-8">
-          {/* Sānu josla (desktop) */}
           <aside className="hidden md:block sticky top-24 self-start">
             <div className="rounded-2xl border border-neutral-200 bg-white p-4 text-sm text-neutral-600">
               <div className="font-medium text-neutral-900">Darbības</div>
@@ -86,7 +77,6 @@ export default function InsightPage({ post }: { post: Insight }) {
             </div>
           </aside>
 
-          {/* Raksta “prose” */}
           <article className="rounded-2xl border border-neutral-200 bg-white p-6 md:p-8">
             <div className="text-[17px] leading-[1.8] text-neutral-800">
               {post.content.map((para, i) => (
@@ -102,7 +92,6 @@ export default function InsightPage({ post }: { post: Insight }) {
                 </p>
               ))}
 
-              {/* Maigs “kopsavilkuma” callout */}
               <div className="my-8 rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-neutral-700">
                 <div className="text-sm font-medium text-neutral-900">Kopsavilkums</div>
                 <ul className="mt-2 list-disc pl-5 space-y-1">
@@ -114,7 +103,6 @@ export default function InsightPage({ post }: { post: Insight }) {
               </div>
             </div>
 
-            {/* Apakšas navigācija */}
             <div className="mt-8 flex gap-3">
               <Link
                 href="/insights"
@@ -131,11 +119,9 @@ export default function InsightPage({ post }: { post: Insight }) {
             </div>
           </article>
 
-          {/* Rezervēts labais sāns (simetrijai) */}
           <div className="hidden md:block" />
         </section>
 
-        {/* Citi raksti */}
         {more.length > 0 && (
           <section className="mt-16 border-t border-neutral-200 pt-8">
             <h2 className="text-xl font-semibold tracking-tight text-neutral-900">Citi raksti</h2>

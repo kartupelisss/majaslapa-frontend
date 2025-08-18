@@ -33,3 +33,8 @@ img, video { max-width: 100%; height: auto; }
 /* Smalkāks links pēc noklusējuma */
 a { text-decoration: none; }
 a:hover { text-decoration: none; }
+
+html { scroll-behavior: smooth; }
+
+/* lai enkurs nepaslēptos aiz sticky header: */
+:target { scroll-margin-top: 80px; }
