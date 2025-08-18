@@ -128,6 +128,7 @@ function PakalpojumiInteractive() {
 
 /** ---- Galvenā lapa ---- */
 export default function Home() {
+  // Mega-menu (hover) vadība
   const [menuOpen, setMenuOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const openMenu = () => {
@@ -167,8 +168,9 @@ export default function Home() {
           <nav className="hidden md:flex items-center gap-8 text-sm">
             <Link className="hover:opacity-80" href="/insights">Insights</Link>
 
+            {/* Services trigger: bultiņa griežas, kad atvērts */}
             <div
-              className="relative"
+              className="relative group"
               onMouseEnter={openMenu}
               onMouseLeave={delayedClose}
               onFocus={openMenu}
@@ -176,14 +178,31 @@ export default function Home() {
             >
               <button
                 type="button"
-                className="hover:opacity-80"
+                className="inline-flex items-center gap-1 hover:opacity-80"
                 aria-haspopup="true"
                 aria-expanded={menuOpen}
               >
-                Services
+                <span>Services</span>
+                <svg
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                  className={
+                    "h-3.5 w-3.5 opacity-60 transition-transform duration-200 group-hover:opacity-100 " +
+                    (menuOpen ? "rotate-180" : "rotate-0")
+                  }
+                >
+                  <path
+                    d="M6 8l4 4 4-4"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                  />
+                </svg>
               </button>
 
-              {/* Mega menu panelis (tagad necaurspīdīgs) */}
+              {/* Mega menu panelis (necaurspīdīgs) */}
               {menuOpen && (
                 <div
                   className="absolute left-1/2 z-50 mt-3 w-[82vw] max-w-5xl -translate-x-1/2 rounded-2xl border border-neutral-200 bg-white shadow-2xl ring-1 ring-neutral-900/5"
@@ -191,6 +210,7 @@ export default function Home() {
                   onMouseLeave={delayedClose}
                   aria-label="Pakalpojumu izvēlne"
                 >
+                  {/* Paneļa headeris */}
                   <div className="flex items-center justify-between gap-4 border-b border-neutral-200 px-6 py-4">
                     <div>
                       <div className="text-xs uppercase tracking-wide text-neutral-500">Pakalpojumi</div>
@@ -208,7 +228,9 @@ export default function Home() {
                     </button>
                   </div>
 
+                  {/* Paneļa saturs */}
                   <div className="grid md:grid-cols-[2fr_1fr] gap-6 p-6">
+                    {/* Saraksts (2 kolonnas) */}
                     <div className="grid grid-cols-2 gap-x-10 gap-y-3 pr-6 md:border-r md:border-neutral-200">
                       {SERVICES.map((s) => (
                         <button
@@ -232,6 +254,7 @@ export default function Home() {
                       </button>
                     </div>
 
+                    {/* Featured bloks */}
                     <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
                       <div className="text-xs text-neutral-500">Featured</div>
                       <div className="mt-2 text-sm font-medium leading-snug">
