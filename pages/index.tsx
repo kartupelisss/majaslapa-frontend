@@ -53,16 +53,13 @@ const SERVICES: Service[] = [
 
 /** ---- Interaktīvā Pakalpojumu sadaļa mājaslapā ---- */
 function PakalpojumiInteractive() {
-  // sākotnējā izvēle – no hash vai pirmā
   const initialSlug = useMemo(() => {
     if (typeof window === "undefined") return SERVICES[0].slug;
     const h = window.location.hash.replace("#", "");
     return h.startsWith("pakalpojumi-") ? h.replace("pakalpojumi-", "") : SERVICES[0].slug;
   }, []);
-
   const [active, setActive] = useState<string>(initialSlug);
 
-  // reaģē uz hash izmaiņām (piem., no mega-menu klikšķa)
   useEffect(() => {
     const onHash = () => {
       const h = window.location.hash.replace("#", "");
@@ -75,7 +72,6 @@ function PakalpojumiInteractive() {
     return () => window.removeEventListener("hashchange", onHash);
   }, [active]);
 
-  // atjaunojam hash, kad mainām no pašas sadaļas
   useEffect(() => {
     if (typeof window === "undefined") return;
     history.replaceState(null, "", `#pakalpojumi-${active}`);
@@ -85,7 +81,6 @@ function PakalpojumiInteractive() {
 
   return (
     <div className="mt-10 grid gap-6 md:grid-cols-[minmax(260px,360px)_1fr]">
-      {/* Kreisā kolonna — vertikāls saraksts */}
       <nav aria-label="Pakalpojumu saraksts" className="space-y-2 rounded-2xl border border-neutral-200 p-2 bg-white">
         {SERVICES.map((s) => {
           const isActive = s.slug === active;
@@ -105,7 +100,6 @@ function PakalpojumiInteractive() {
         })}
       </nav>
 
-      {/* Labā kolonna — mainīgā kartīte */}
       <div className="rounded-2xl border border-neutral-200 p-6 bg-white">
         <h3 className="text-2xl font-semibold">{current.title}</h3>
         <p className="mt-1 text-sm text-neutral-600">{current.excerpt}</p>
@@ -134,7 +128,6 @@ function PakalpojumiInteractive() {
 
 /** ---- Galvenā lapa ---- */
 export default function Home() {
-  // Mega-menu (hover) vadība
   const [menuOpen, setMenuOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const openMenu = () => {
@@ -172,11 +165,8 @@ export default function Home() {
           <BrandMark />
 
           <nav className="hidden md:flex items-center gap-8 text-sm">
-            <Link className="hover:opacity-80" href="/insights">
-              Insights
-            </Link>
+            <Link className="hover:opacity-80" href="/insights">Insights</Link>
 
-            {/* Services trigger: hover = atver paneli */}
             <div
               className="relative"
               onMouseEnter={openMenu}
@@ -193,15 +183,14 @@ export default function Home() {
                 Services
               </button>
 
-              {/* Mega menu panelis ar virsrakstu “Pakalpojumi” */}
+              {/* Mega menu panelis (tagad necaurspīdīgs) */}
               {menuOpen && (
                 <div
-                  className="absolute left-1/2 z-50 mt-3 w-[82vw] max-w-5xl -translate-x-1/2 rounded-2xl border border-neutral-200 bg-white/95 backdrop-blur shadow-2xl ring-1 ring-neutral-900/5"
+                  className="absolute left-1/2 z-50 mt-3 w-[82vw] max-w-5xl -translate-x-1/2 rounded-2xl border border-neutral-200 bg-white shadow-2xl ring-1 ring-neutral-900/5"
                   onMouseEnter={openMenu}
                   onMouseLeave={delayedClose}
                   aria-label="Pakalpojumu izvēlne"
                 >
-                  {/* Paneļa headeris */}
                   <div className="flex items-center justify-between gap-4 border-b border-neutral-200 px-6 py-4">
                     <div>
                       <div className="text-xs uppercase tracking-wide text-neutral-500">Pakalpojumi</div>
@@ -219,9 +208,7 @@ export default function Home() {
                     </button>
                   </div>
 
-                  {/* Paneļa saturs */}
                   <div className="grid md:grid-cols-[2fr_1fr] gap-6 p-6">
-                    {/* Saraksts (2 kolonnas) */}
                     <div className="grid grid-cols-2 gap-x-10 gap-y-3 pr-6 md:border-r md:border-neutral-200">
                       {SERVICES.map((s) => (
                         <button
@@ -245,7 +232,6 @@ export default function Home() {
                       </button>
                     </div>
 
-                    {/* Featured bloks */}
                     <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
                       <div className="text-xs text-neutral-500">Featured</div>
                       <div className="mt-2 text-sm font-medium leading-snug">
@@ -260,12 +246,8 @@ export default function Home() {
               )}
             </div>
 
-            <Link className="hover:opacity-80" href="/about">
-              About
-            </Link>
-            <Link className="hover:opacity-80" href="/contact">
-              Contact
-            </Link>
+            <Link className="hover:opacity-80" href="/about">About</Link>
+            <Link className="hover:opacity-80" href="/contact">Contact</Link>
           </nav>
 
           <Link
@@ -298,13 +280,7 @@ export default function Home() {
               >
                 Iesākt sarunu
                 <svg className="ml-2 h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden>
-                  <path
-                    d="M5 12h14M13 5l7 7-7 7"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
+                  <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </Link>
               <Link
