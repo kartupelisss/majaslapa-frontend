@@ -106,6 +106,15 @@ function PakalpojumiInteractive() {
 }
 
 export default function Home() {
+  // Sticky header krāsas maiņa uz scroll
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll(); // sākotnējais stāvoklis
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
       <Head>
@@ -115,21 +124,24 @@ export default function Home() {
           content="Stratēģiskas nodokļu konsultācijas ar juridisko precizitāti un finanšu domāšanu. Latvijā un pārrobežu darījumos."
         />
         <meta property="og:title" content="Nodokļu risinājumi ar precizitāti — Jurista birojs" />
-        <meta
-          property="og:description"
-          content="Stratēģiskas nodokļu konsultācijas ar juridisko precizitāti un finanšu domāšanu."
-        />
+        <meta property="og:description" content="Stratēģiskas nodokļu konsultācijas ar juridisko precizitāti un finanšu domāšanu." />
         <meta property="og:type" content="website" />
       </Head>
 
-      {/* Header ar logo (tikai šajā lapā) */}
-      <header className="border-b border-neutral-200">
-        <div className="mx-auto max-w-7xl px-6 py-5 flex items-center justify-between">
+      {/* Sticky Header */}
+      <header
+        className={[
+          "sticky top-0 z-50 border-b transition-colors duration-300",
+          scrolled
+            ? "bg-neutral-900/95 text-white border-neutral-800 shadow-sm"
+            : "bg-white/80 text-neutral-900 border-neutral-200 backdrop-blur"
+        ].join(" ")}
+      >
+        <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
           <BrandMark />
 
           <nav className="hidden md:flex items-center gap-8 text-sm">
             <Link className="hover:opacity-80" href="/insights">Insights</Link>
-            {/* /services -> uz mājas lapas sadaļu */}
             <Link className="hover:opacity-80" href="/#pakalpojumi">Services</Link>
             <Link className="hover:opacity-80" href="/about">About</Link>
             <Link className="hover:opacity-80" href="/contact">Contact</Link>
@@ -137,7 +149,12 @@ export default function Home() {
 
           <Link
             href="/contact"
-            className="inline-flex items-center rounded-full border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50"
+            className={[
+              "inline-flex items-center rounded-full px-4 py-2 text-sm transition",
+              scrolled
+                ? "bg-white text-neutral-900 hover:opacity-90"
+                : "border border-neutral-200 hover:bg-neutral-50"
+            ].join(" ")}
           >
             Sazināties
           </Link>
@@ -192,7 +209,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pakalpojumi (aizstāj iepriekšējo “Mūsu fokuss”) */}
+      {/* Pakalpojumi */}
       <section id="pakalpojumi" className="border-t border-neutral-200">
         <div className="mx-auto max-w-7xl px-6 py-16">
           <div className="max-w-3xl">
