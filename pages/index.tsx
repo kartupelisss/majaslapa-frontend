@@ -1,66 +1,93 @@
 // pages/index.tsx
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import BrandMark from "../components/ui/BrandMark";
 
-/** Mini-komponents: interaktīvā Pakalpojumu sadaļa (paliek uz tās pašas lapas) */
+/** ---- Koplietojamie pakalpojumu dati (izmanto gan mega-menu, gan sadaļa) ---- */
+type Service = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  bullets: string[];
+};
+const SERVICES: Service[] = [
+  {
+    slug: "stridi-un-parbaudes",
+    title: "Strīdi un pārbaudes",
+    excerpt: "Pārstāvība VID un tiesās — no skaidrojumiem līdz apelācijām.",
+    bullets: ["Pārsūdzības un paskaidrojumi", "Procesa stratēģija", "Judikatūras izmantošana"],
+  },
+  {
+    slug: "pvn-un-parrobezu-darijumi",
+    title: "PVN un pārrobežu darījumi",
+    excerpt: "Drošas ķēdes, reģistrācijas, rēķini, atbilstība jurisdikcijās.",
+    bullets: ["OSS/IOSS, PVN reģistrācijas", "Piegādes vietas noteikšana", "Dokumentēšana un pierādījumi"],
+  },
+  {
+    slug: "transfercenu-politika",
+    title: "Transfercenu politika",
+    excerpt: "Struktūra, dokumentācija un audits saskaņā ar OECD vadlīnijām.",
+    bullets: ["Master/Local File minimums", "Salīdzināmo izvēle un metodes", "Dokumentācija gatavībai auditam"],
+  },
+  {
+    slug: "ieturejuma-nodokli",
+    title: "Ieturējuma nodokļi",
+    excerpt: "Līgumu struktūras, atvieglojumi un dokumentu noformēšana.",
+    bullets: ["Rezidences sertifikāti", "Peļņas izmaksu guvumi", "Atbrīvojumu plānošana"],
+  },
+  {
+    slug: "restrukturizacija",
+    title: "Restrukturizācija",
+    excerpt: "Nodokļu ietekmes izvērtēšana uzņēmumu jaunajā jurisdikcijā.",
+    bullets: ["Darījumu kartēšana", "Riska analīze", "Pārejas lēmumi"],
+  },
+  {
+    slug: "es-oecd-prakse",
+    title: "ES/OECD prakse",
+    excerpt: "Atbilstība direktīvām, vadlīnijām un jaunajai judikatūrai.",
+    bullets: ["Direktīvu transponēšana", "Valdību pieteikumi", "Tiesu prakses monitorings"],
+  },
+];
+
+/** ---- Interaktīvā Pakalpojumu sadaļa mājaslapā ---- */
 function PakalpojumiInteractive() {
-  const services = useMemo(
-    () => [
-      {
-        slug: "stridi-un-parbaudes",
-        title: "Strīdi un pārbaudes",
-        excerpt: "Pārstāvība VID un tiesās — no skaidrojumiem līdz apelācijām.",
-        bullets: ["Pārsūdzības un paskaidrojumi", "Procesa stratēģija", "Judikatūras izmantošana"],
-      },
-      {
-        slug: "pvn-un-parrobezu-darijumi",
-        title: "PVN un pārrobežu darījumi",
-        excerpt: "Drošas ķēdes, reģistrācijas, rēķini, atbilstība jurisdikcijās.",
-        bullets: ["OSS/IOSS, PVN reģistrācijas", "Piegādes vietas noteikšana", "Dokumentēšana un pierādījumi"],
-      },
-      {
-        slug: "transfercenu-politika",
-        title: "Transfercenu politika",
-        excerpt: "Struktūra, dokumentācija un audits saskaņā ar OECD vadlīnijām.",
-        bullets: ["Master/Local File minimums", "Salīdzināmo izvēle un metodes", "Dokumentācija gatavībai auditam"],
-      },
-      {
-        slug: "ieturejuma-nodokli",
-        title: "Ieturējuma nodokļi",
-        excerpt: "Līgumu struktūras, atvieglojumi un dokumentu noformēšana.",
-        bullets: ["Rezidences sertifikāti", "Peļņas izmaksu guvumi", "Atbrīvojumu plānošana"],
-      },
-      {
-        slug: "restrukturizacija",
-        title: "Restrukturizācija",
-        excerpt: "Nodokļu ietekmes izvērtēšana uzņēmumu jaunajā jurisdikcijā.",
-        bullets: ["Darījumu kartēšana", "Riska analīze", "Pārejas lēmumi"],
-      },
-      {
-        slug: "es-oecd-prakse",
-        title: "ES/OECD prakse",
-        excerpt: "Atbilstība direktīvām, vadlīnijām un jaunajai judikatūrai.",
-        bullets: ["Direktīvu transponēšana", "Valdību pieteikumi", "Tiesu prakses monitorings"],
-      },
-    ],
-    []
-  );
+  // sākotnējā izvēle – no hash vai pirmā
+  const initialSlug = useMemo(() => {
+    if (typeof window === "undefined") return SERVICES[0].slug;
+    const h = window.location.hash.replace("#", "");
+    return h.startsWith("pakalpojumi-")
+      ? h.replace("pakalpojumi-", "")
+      : SERVICES[0].slug;
+  }, []);
+  const [active, setActive] = useState<string>(initialSlug);
 
-  const [active, setActive] = useState<string>(services[0].slug);
-  const current = services.find((s) => s.slug === active) ?? services[0];
-
+  // reaģē uz hash izmaiņām (piem., no mega-menu klikšķa)
   useEffect(() => {
-    // Dalīties ar tiešo skatu (#pakalpojumi-<slug>) bez pārlādes
+    const onHash = () => {
+      const h = window.location.hash.replace("#", "");
+      if (h.startsWith("pakalpojumi-")) {
+        const slug = h.replace("pakalpojumi-", "");
+        if (slug !== active) setActive(slug);
+      }
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [active]);
+
+  // atjaunojam hash, kad mainām no pašas sadaļas
+  useEffect(() => {
+    if (typeof window === "undefined") return;
     history.replaceState(null, "", `#pakalpojumi-${active}`);
   }, [active]);
+
+  const current = SERVICES.find((s) => s.slug === active) ?? SERVICES[0];
 
   return (
     <div className="mt-10 grid gap-6 md:grid-cols-[minmax(260px,360px)_1fr]">
       {/* Kreisā kolonna — vertikāls saraksts */}
       <nav aria-label="Pakalpojumu saraksts" className="space-y-2 rounded-2xl border border-neutral-200 p-2 bg-white">
-        {services.map((s) => {
+        {SERVICES.map((s) => {
           const isActive = s.slug === active;
           return (
             <button
@@ -105,7 +132,28 @@ function PakalpojumiInteractive() {
   );
 }
 
+/** ---- Galvenā lapa ---- */
 export default function Home() {
+  // Mega-menu (hover) vadība
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openMenu = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setMenuOpen(true);
+  };
+  const delayedClose = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setMenuOpen(false), 120);
+  };
+
+  function goToService(slug: string) {
+    // iestata hash + novelk uz sadaļu (paliekam homepage)
+    window.location.hash = `pakalpojumi-${slug}`;
+    const el = document.querySelector("#pakalpojumi");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    setMenuOpen(false);
+  }
+
   return (
     <>
       <Head>
@@ -115,21 +163,82 @@ export default function Home() {
           content="Stratēģiskas nodokļu konsultācijas ar juridisko precizitāti un finanšu domāšanu. Latvijā un pārrobežu darījumos."
         />
         <meta property="og:title" content="Nodokļu risinājumi ar precizitāti — Jurista birojs" />
-        <meta
-          property="og:description"
-          content="Stratēģiskas nodokļu konsultācijas ar juridisko precizitāti un finanšu domāšanu."
-        />
+        <meta property="og:description" content="Stratēģiskas nodokļu konsultācijas ar juridisko precizitāti un finanšu domāšanu." />
         <meta property="og:type" content="website" />
       </Head>
 
-      {/* Sticky Header (nemaina krāsu scrollojot) */}
+      {/* Sticky Header + mega-menu uz hover */}
       <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/80 backdrop-blur">
-        <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
+        <div className="relative mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
           <BrandMark />
 
           <nav className="hidden md:flex items-center gap-8 text-sm">
             <Link className="hover:opacity-80" href="/insights">Insights</Link>
-            <Link className="hover:opacity-80" href="/#pakalpojumi">Services</Link>
+
+            {/* Services trigger: hover = atver paneli */}
+            <div
+              className="relative"
+              onMouseEnter={openMenu}
+              onMouseLeave={delayedClose}
+              onFocus={openMenu}
+              onBlur={delayedClose}
+            >
+              <button
+                type="button"
+                className="hover:opacity-80"
+                aria-haspopup="true"
+                aria-expanded={menuOpen}
+              >
+                Services
+              </button>
+
+              {/* Mega menu panelis */}
+              {menuOpen && (
+                <div
+                  className="absolute left-1/2 z-50 mt-3 w-[80vw] max-w-5xl -translate-x-1/2 rounded-2xl border border-neutral-200 bg-white shadow-xl"
+                  onMouseEnter={openMenu}
+                  onMouseLeave={delayedClose}
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6">
+                    <div className="md:col-span-2">
+                      <div className="grid grid-cols-2 gap-x-10 gap-y-3">
+                        {SERVICES.map((s) => (
+                          <button
+                            key={s.slug}
+                            onClick={() => goToService(s.slug)}
+                            className="text-left text-sm py-1 hover:underline"
+                          >
+                            {s.title}
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => {
+                          window.location.hash = "pakalpojumi";
+                          document.querySelector("#pakalpojumi")?.scrollIntoView({ behavior: "smooth" });
+                          setMenuOpen(false);
+                        }}
+                        className="mt-4 text-sm underline"
+                      >
+                        Show all
+                      </button>
+                    </div>
+
+                    {/* Featured (vienkāršots bloks; vari aizvietot ar bildi) */}
+                    <div className="rounded-xl border border-neutral-200 p-4 bg-neutral-50">
+                      <div className="text-xs text-neutral-500">Featured</div>
+                      <div className="mt-2 text-sm font-medium">
+                        Nodokļu strīdu stratēģijas: 3 praktiski soļi pirms VID sarunām
+                      </div>
+                      <Link href="/insights" className="mt-3 inline-block text-sm underline">
+                        Lasīt vairāk
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <Link className="hover:opacity-80" href="/about">About</Link>
             <Link className="hover:opacity-80" href="/contact">Contact</Link>
           </nav>
