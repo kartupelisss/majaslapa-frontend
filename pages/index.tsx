@@ -4,13 +4,14 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import BrandMark from "../components/ui/BrandMark";
 
-/** ---- Koplietojamie pakalpojumu dati (izmanto gan mega-menu, gan sadaļa) ---- */
+/** ---- Dati: Pakalpojumi (izmanto gan mega-menu, gan sadaļa) ---- */
 type Service = {
   slug: string;
   title: string;
   excerpt: string;
   bullets: string[];
 };
+
 const SERVICES: Service[] = [
   {
     slug: "stridi-un-parbaudes",
@@ -56,10 +57,9 @@ function PakalpojumiInteractive() {
   const initialSlug = useMemo(() => {
     if (typeof window === "undefined") return SERVICES[0].slug;
     const h = window.location.hash.replace("#", "");
-    return h.startsWith("pakalpojumi-")
-      ? h.replace("pakalpojumi-", "")
-      : SERVICES[0].slug;
+    return h.startsWith("pakalpojumi-") ? h.replace("pakalpojumi-", "") : SERVICES[0].slug;
   }, []);
+
   const [active, setActive] = useState<string>(initialSlug);
 
   // reaģē uz hash izmaiņām (piem., no mega-menu klikšķa)
@@ -147,7 +147,6 @@ export default function Home() {
   };
 
   function goToService(slug: string) {
-    // iestata hash + novelk uz sadaļu (paliekam homepage)
     window.location.hash = `pakalpojumi-${slug}`;
     const el = document.querySelector("#pakalpojumi");
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -173,7 +172,9 @@ export default function Home() {
           <BrandMark />
 
           <nav className="hidden md:flex items-center gap-8 text-sm">
-            <Link className="hover:opacity-80" href="/insights">Insights</Link>
+            <Link className="hover:opacity-80" href="/insights">
+              Insights
+            </Link>
 
             {/* Services trigger: hover = atver paneli */}
             <div
@@ -192,45 +193,65 @@ export default function Home() {
                 Services
               </button>
 
-              {/* Mega menu panelis */}
+              {/* Mega menu panelis ar virsrakstu “Pakalpojumi” */}
               {menuOpen && (
                 <div
-                  className="absolute left-1/2 z-50 mt-3 w-[80vw] max-w-5xl -translate-x-1/2 rounded-2xl border border-neutral-200 bg-white shadow-xl"
+                  className="absolute left-1/2 z-50 mt-3 w-[82vw] max-w-5xl -translate-x-1/2 rounded-2xl border border-neutral-200 bg-white/95 backdrop-blur shadow-2xl ring-1 ring-neutral-900/5"
                   onMouseEnter={openMenu}
                   onMouseLeave={delayedClose}
+                  aria-label="Pakalpojumu izvēlne"
                 >
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6">
-                    <div className="md:col-span-2">
-                      <div className="grid grid-cols-2 gap-x-10 gap-y-3">
-                        {SERVICES.map((s) => (
-                          <button
-                            key={s.slug}
-                            onClick={() => goToService(s.slug)}
-                            className="text-left text-sm py-1 hover:underline"
-                          >
-                            {s.title}
-                          </button>
-                        ))}
-                      </div>
+                  {/* Paneļa headeris */}
+                  <div className="flex items-center justify-between gap-4 border-b border-neutral-200 px-6 py-4">
+                    <div>
+                      <div className="text-xs uppercase tracking-wide text-neutral-500">Pakalpojumi</div>
+                      <div className="mt-1 h-1 w-8 rounded-full bg-neutral-900/80" aria-hidden />
+                    </div>
+                    <button
+                      onClick={() => {
+                        window.location.hash = "pakalpojumi";
+                        document.querySelector("#pakalpojumi")?.scrollIntoView({ behavior: "smooth" });
+                        setMenuOpen(false);
+                      }}
+                      className="text-sm underline underline-offset-4 hover:opacity-80"
+                    >
+                      Skatīt visu sadaļu
+                    </button>
+                  </div>
+
+                  {/* Paneļa saturs */}
+                  <div className="grid md:grid-cols-[2fr_1fr] gap-6 p-6">
+                    {/* Saraksts (2 kolonnas) */}
+                    <div className="grid grid-cols-2 gap-x-10 gap-y-3 pr-6 md:border-r md:border-neutral-200">
+                      {SERVICES.map((s) => (
+                        <button
+                          key={s.slug}
+                          onClick={() => goToService(s.slug)}
+                          className="text-left text-sm py-1 hover:underline decoration-neutral-300 underline-offset-4"
+                        >
+                          {s.title}
+                        </button>
+                      ))}
+
                       <button
                         onClick={() => {
                           window.location.hash = "pakalpojumi";
                           document.querySelector("#pakalpojumi")?.scrollIntoView({ behavior: "smooth" });
                           setMenuOpen(false);
                         }}
-                        className="mt-4 text-sm underline"
+                        className="col-span-2 mt-2 inline-flex items-center gap-1 text-sm font-medium underline underline-offset-4 hover:opacity-80"
                       >
-                        Show all
+                        Show all <span aria-hidden>→</span>
                       </button>
                     </div>
 
-                    {/* Featured (vienkāršots bloks; vari aizvietot ar bildi) */}
-                    <div className="rounded-xl border border-neutral-200 p-4 bg-neutral-50">
+                    {/* Featured bloks */}
+                    <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
                       <div className="text-xs text-neutral-500">Featured</div>
-                      <div className="mt-2 text-sm font-medium">
+                      <div className="mt-2 text-sm font-medium leading-snug">
                         Nodokļu strīdu stratēģijas: 3 praktiski soļi pirms VID sarunām
                       </div>
-                      <Link href="/insights" className="mt-3 inline-block text-sm underline">
+                      <Link href="/insights" className="mt-3 inline-block text-sm underline underline-offset-4">
                         Lasīt vairāk
                       </Link>
                     </div>
@@ -239,8 +260,12 @@ export default function Home() {
               )}
             </div>
 
-            <Link className="hover:opacity-80" href="/about">About</Link>
-            <Link className="hover:opacity-80" href="/contact">Contact</Link>
+            <Link className="hover:opacity-80" href="/about">
+              About
+            </Link>
+            <Link className="hover:opacity-80" href="/contact">
+              Contact
+            </Link>
           </nav>
 
           <Link
@@ -273,7 +298,13 @@ export default function Home() {
               >
                 Iesākt sarunu
                 <svg className="ml-2 h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden>
-                  <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path
+                    d="M5 12h14M13 5l7 7-7 7"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </Link>
               <Link
