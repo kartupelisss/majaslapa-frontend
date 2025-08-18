@@ -1,6 +1,6 @@
 // components/ServicesSection.tsx
 import { useEffect, useMemo, useState } from "react";
-import { services } from "@/lib/servicesData";
+import { services } from "@/lib/servicesdata";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
