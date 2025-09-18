@@ -1,0 +1,59 @@
+import type { GetServerSideProps } from "next";
+
+/**
+ * Kanoniskie slugi – tiem tev ir atsevišķas lapas:
+ * /services/<slug>.tsx (skat. failus direktorijā).
+ */
+const CANONICAL = new Set([
+  "arpakalpojuma-gramatvediba",
+  "darijumu-strukturesana",
+  "juridiskie-pakalpojumi",
+  "nodoklu-konsultacijas",
+  "nodoklu-risku-izvertesana-un-planosana",
+  "parstaviba-ar-vid",
+  "transfertcenas",
+  "vertesanas-un-biznesa-konsultacijas",
+]);
+
+/**
+ * Aliasu karte – ja poga aizved uz “saīsinātu”/citu slugu,
+ * mēs pār-virzām uz īsto lapu.
+ */
+const ALIAS: Record<string, string> = {
+  "riski-planosana": "nodoklu-risku-izvertesana-un-planosana",
+  "juridiskie": "juridiskie-pakalpojumi",
+  "stridi-vid": "parstaviba-ar-vid",
+  "parstaviba-komunikacija-un-stridos-ar-vid": "parstaviba-ar-vid",
+  "vertesana-biznesa": "vertesanas-un-biznesa-konsultacijas",
+  "gramatvediba": "arpakalpojuma-gramatvediba",
+  "darijumu-strukture": "darijumu-strukturesana",
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const slug = String(params?.slug || "");
+
+  // Ja slug jau ir kanonisks, ļaujam Nextam atdot attiecīgo .tsx lapu (ja tāda eksistē)
+  if (CANONICAL.has(slug)) {
+    // Ja šāds .tsx fails nav uz vietas, rādīsies tava 404.tsx
+    return { props: {} };
+  }
+
+  // Ja ir alias, pār-virzām uz kanonisko
+  const target = ALIAS[slug];
+  if (target) {
+    return {
+      redirect: {
+        destination: `/services/${target}`,
+        permanent: true,
+      },
+    };
+  }
+
+  // Citādi – 404 (tiks parādīta tava pages/404.tsx)
+  return { notFound: true };
+};
+
+// Šai lapai nav nekā ko renderēt; viss notiek ar redirect/notFound serverpusē.
+export default function ServiceSlug() {
+  return null;
+}

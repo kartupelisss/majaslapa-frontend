@@ -42,13 +42,7 @@ export default function InsightPage({ post }: { post: Insight }) {
         <meta name="description" content={post.excerpt} />
       </Head>
 
-      <header className="border-b border-neutral-200">
-        <div className="mx-auto max-w-7xl px-6 py-5">
-          <Link href="/" className="text-sm text-neutral-600 hover:text-neutral-900">
-            ← Atpakaļ uz sākumu
-          </Link>
-        </div>
-      </header>
+      {/* NAV nav vajadzīgs – to dod globālais layouts */}
 
       <main className="mx-auto max-w-7xl px-6 py-10">
         <section className="max-w-3xl">
@@ -103,20 +97,7 @@ export default function InsightPage({ post }: { post: Insight }) {
               </div>
             </div>
 
-            <div className="mt-8 flex gap-3">
-              <Link
-                href="/insights"
-                className="rounded-full border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50"
-              >
-                ← Atpakaļ uz Insights
-              </Link>
-              <Link
-                href="/"
-                className="rounded-full border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50"
-              >
-                ← Uz sākumu
-              </Link>
-            </div>
+            {/* NO back buttons here — noņemts */}
           </article>
 
           <div className="hidden md:block" />

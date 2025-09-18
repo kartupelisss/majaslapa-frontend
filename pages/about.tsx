@@ -1,130 +1,217 @@
 // pages/about.tsx
 import Head from "next/head";
 import Link from "next/link";
-import { CheckCircle2, Quote, Mail, Phone } from "lucide-react";
 
 export default function AboutPage() {
   return (
     <>
       <Head>
-        <title>Par juristu — Jurista birojs</title>
+        <title>Par mums — REMPE</title>
         <meta
           name="description"
-          content="Boutique birojs ar fokusu uz nodokļu konsultācijām, pārrobežu darījumiem un strīdiem ar VID."
+          content="REMPE ir neatkarīgs nodokļu, juridisko, transfertcenu un vērtēšanas pakalpojumu birojs. Praktiski, elastīgi, ar starptautisku skatījumu."
         />
       </Head>
 
-      <header className="border-b border-neutral-200">
-        <div className="mx-auto max-w-7xl px-6 py-5">
-          <Link href="/" className="text-sm text-neutral-600 hover:text-neutral-900">
-            ← Atpakaļ uz sākumu
-          </Link>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-6 py-12 lg:py-14">
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-          <div>
-            <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-neutral-900">
-              Par juristu
+      <main>
+        {/* Hero */}
+        <section className="mx-auto max-w-7xl px-6 pt-16 pb-8 lg:pt-24">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900">
+              Par mums
             </h1>
-
-            <p className="mt-4 text-neutral-600 leading-relaxed max-w-2xl">
-              Boutique birojs ar fokusu uz nodokļu konsultācijām, pārrobežu darījumiem un
-              strīdiem ar VID. Praktiska pieeja, precīzi dokumenti un skaidra komunikācija ar
-              finanšu un vadības komandām.
+            <p className="mt-3 text-lg text-neutral-700">
+              <span className="font-medium">REMPE – nodokļu, juridisko un finanšu konsultāciju birojs.</span>
             </p>
+          </div>
+        </section>
 
-            <div className="mt-5 flex flex-wrap gap-2">
-              {["15+ gadu pieredze", "OECD/ES prakse", "VID un tiesvedība", "PVN · transfertcenas"].map((t) => (
-                <span key={t} className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs text-neutral-700">
-                  {t}
-                </span>
-              ))}
+        {/* Intro bloks */}
+        <section className="mx-auto max-w-7xl px-6 pb-14">
+          <div className="grid gap-8 md:grid-cols-3">
+            <div className="md:col-span-2 space-y-5 text-neutral-700 leading-relaxed">
+              <p>
+                REMPE ir neatkarīgs uzņēmums, kas specializējas nodokļu, juridisko, transfertcenu un
+                vērtēšanas pakalpojumu sniegšanā. Mēs strādājam ar uzņēmumiem, uzņēmējiem un
+                starptautiskām grupām, palīdzot tiem strukturēt darījumus, pārvaldīt riskus un pieņemt
+                stratēģiski pamatotus lēmumus.
+              </p>
+              <p>
+                REMPE mērķis ir būt uzticamam partnerim klientiem, nodrošinot ne tikai
+                juridisku un nodokļu atbilstību, bet arī palīdzot veidot efektīvas struktūras,
+                kas veicina izaugsmi un konkurētspēju globālajā tirgū.
+              </p>
+              <p>
+                REMPE darbojas elastīgi un personalizēti – katrs risinājums tiek pielāgots konkrētā
+                klienta biznesa vajadzībām. Mēs iedziļināmies klienta darbībā, analizējam riskus un
+                iespējas, lai sniegtu praktiskus ieteikumus, kas strādā reālajā uzņēmējdarbības vidē.
+              </p>
             </div>
 
-            <ul className="mt-8 space-y-3">
-              {[
-                "Nodokļu konsultācijas un tiesvedība ar konsekventu rezultātu piegādi.",
-                "ES un OECD vadlīniju praktiska piemērošana ikdienas procesos.",
-                "Nozares: ražošana, e-komercija, HoReCa, finanšu pakalpojumi.",
-              ].map((line, i) => (
-                <li key={i} className="flex items-start gap-3 text-neutral-800">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" aria-hidden />
-                  <span>{line}</span>
-                </li>
-              ))}
-            </ul>
-
-            <figure className="mt-8 rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
-              <div className="flex gap-3 text-neutral-800">
-                <Quote className="h-5 w-5 mt-0.5 shrink-0" aria-hidden />
-                <blockquote className="text-[15px] leading-relaxed">
-                  Mans uzdevums ir sarežģīto sadalīt vienkāršos soļos — lai lēmumi ir
-                  izpildāmi, dokumenti aizstāvami un risks prognozējams.
-                </blockquote>
-              </div>
-            </figure>
-
-            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="rounded-2xl border border-neutral-200 bg-white p-4">
-                <div className="text-sm font-medium text-neutral-900">Izglītība</div>
-                <ul className="mt-2 text-sm text-neutral-700 space-y-1">
-                  <li>Mg.iur., finanšu un nodokļu tiesības</li>
-                  <li>Starptautiskās nodokļu programmas (OECD/IBFD)</li>
-                </ul>
-              </div>
-              <div className="rounded-2xl border border-neutral-200 bg-white p-4">
-                <div className="text-sm font-medium text-neutral-900">Valodas</div>
-                <ul className="mt-2 text-sm text-neutral-700 space-y-1">
-                  <li>Latviešu, angļu, krievu</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-3">
+            {/* Side card */}
+            <aside className="rounded-3xl border border-neutral-200 bg-white p-6">
+              <div className="text-sm uppercase tracking-wide text-neutral-500">Mūsu pieeja</div>
+              <ul className="mt-3 list-disc pl-5 text-neutral-700 space-y-2">
+                <li>Praktiski risinājumi ar biznesa domāšanu</li>
+                <li>Elastība un individuāla attieksme</li>
+                <li>Konfidencialitāte un atbildība par rezultātu</li>
+              </ul>
               <Link
                 href="/contact"
-                className="inline-flex items-center rounded-full bg-neutral-900 px-5 py-3 text-sm font-medium text-white hover:opacity-90"
+                className="mt-6 inline-flex items-center justify-center rounded-full border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50"
               >
-                Sazināties
+                Sazināties ar REMPE
               </Link>
-              <a href="mailto:info@example.com" className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50">
-                <Mail className="h-4 w-4" /> info@example.com
-              </a>
-              <a href="tel:+37120000000" className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50">
-                <Phone className="h-4 w-4" /> +371 20 000 000
-              </a>
-            </div>
+            </aside>
           </div>
+        </section>
 
-          <div className="relative">
-            <div
-              className="rounded-3xl border border-neutral-200 bg-neutral-100 h-[360px] md:h-[440px] lg:h-[520px]"
-              aria-label="Foto vieta"
-              style={{
-                backgroundImage:
-                  "radial-gradient(600px 240px at 20% 0%, rgba(0,0,0,.04), transparent 60%)",
-              }}
-            />
-            <div className="mt-3 text-xs text-neutral-500">
-              Foto vietturis — ieliksim reālu portretu vēlāk (1200×1500 ieteicams).
+        {/* Kompetences */}
+        <section className="border-t border-neutral-200">
+          <div className="mx-auto max-w-7xl px-6 py-14">
+            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900">
+              Mūsu kompetences
+            </h2>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                "Nodokļu konsultācijas un plānošana",
+                "Transfertcenu dokumentācija un stratēģija",
+                "Uzņēmumu un darījumu strukturēšana",
+                "Biznesa un nemateriālo aktīvu vērtēšana",
+                "Pārstāvība nodokļu strīdos un komunikācijā ar VID",
+                "Atbalsts M&A un starptautiskos darījumos",
+              ].map((t, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-neutral-800"
+                >
+                  {t}
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        <section className="mt-14 border-t border-neutral-200 pt-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { k: "> 15 gadi", v: "Nodokļu konsultācijas" },
-              { k: "100+ projekti", v: "PVN / transfertcenas" },
-              { k: "VID & tiesas", v: "Regulāra pārstāvība" },
-            ].map((item) => (
-              <div key={item.k} className="rounded-2xl border border-neutral-200 bg-white p-5">
-                <div className="text-base font-semibold text-neutral-900">{item.k}</div>
-                <div className="text-sm text-neutral-600">{item.v}</div>
+        {/* Par vadītāju */}
+        <section id="team" className="border-t border-neutral-200 bg-neutral-50">
+          <div className="mx-auto max-w-7xl px-6 py-14">
+            <div className="grid gap-8 lg:grid-cols-3">
+              {/* Persona card */}
+              <div className="lg:col-span-1">
+                <div className="rounded-3xl border border-neutral-200 bg-white p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="h-16 w-16 rounded-full bg-neutral-200 grid place-items-center text-neutral-700 font-medium">
+                      DR
+                    </div>
+                    <div>
+                      <div className="text-lg font-semibold text-neutral-900">
+                        Dīns Ričards Rempe
+                      </div>
+                      <div className="text-neutral-600">Dibinātājs un vadītājs</div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 text-sm text-neutral-600">
+                    Sertificēts nodokļu konsultants ar plašu pieredzi nodokļu tiesību, transfertcenu un
+                    korporatīvo darījumu jomā.
+                  </div>
+
+                  <Link
+                    href="/contact"
+                    className="mt-6 inline-flex items-center justify-center rounded-full border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50 w-full"
+                  >
+                    Sazināties par konsultāciju
+                  </Link>
+                </div>
               </div>
-            ))}
+
+              {/* Persona bio */}
+              <div className="lg:col-span-2 space-y-5 text-neutral-700 leading-relaxed">
+                <h3 className="text-xl md:text-2xl font-semibold text-neutral-900">
+                  Par vadītāju — Dīns Ričards Rempe
+                </h3>
+                <p>
+                  Dīna profesionālā karjera veidojusies, strādājot pie sarežģītiem projektiem Latvijā
+                  un starptautiskā mērogā, tostarp:
+                </p>
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>transfertcenu politiku izstrāde un ieviešana uzņēmumu grupām;</li>
+                  <li>biznesa un nemateriālo aktīvu vērtēšana;</li>
+                  <li>pārrobežu darījumu strukturēšana un nodokļu plānošana;</li>
+                  <li>juridisko un nodokļu risku analīze un pārstāvība tiesvedībās.</li>
+                </ul>
+                <p>
+                  Ar akadēmisko izglītību tiesību zinātnēs un LL.M. grādu, Dīns ir izveidojis reputāciju
+                  kā uz rezultātu orientēts padomdevējs, kurš spēj apvienot juridisko precizitāti ar
+                  biznesa domāšanu. Viņš regulāri sadarbojas ar uzņēmumu īpašniekiem, finanšu direktoriem
+                  un investoriem, lai atrastu risinājumus, kas ne tikai nodrošina atbilstību likumiem,
+                  bet arī dod praktisku pievienoto vērtību.
+                </p>
+                <p>
+                  Dīnu raksturo analītiska domāšana, precizitāte un spēja sarežģītus jautājumus
+                  izskaidrot saprotami. Viņš uzskata, ka konsultanta uzdevums nav tikai sniegt juridiski
+                  pareizu atbildi, bet arī palīdzēt klientam pieņemt stratēģiskus lēmumus.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Izglītība un sertifikāti */}
+        <section id="education" className="border-t border-neutral-200">
+          <div className="mx-auto max-w-7xl px-6 py-14">
+            <h3 className="text-2xl font-semibold text-neutral-900">
+              Izglītība un sertifikāti
+            </h3>
+
+            <div className="mt-6 grid gap-6 md:grid-cols-2">
+              <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+                <ul className="list-disc pl-5 space-y-2 text-neutral-700">
+                  <li>
+                    Rīgas Juridiskā augstskola — maģistra grāds tiesību zinātnēs (LL.M)
+                  </li>
+                  <li>
+                    Latvijas Nodokļu konsultantu asociācija — sertificēts nodokļu konsultants
+                  </li>
+                </ul>
+              </div>
+
+              <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+                <div className="font-medium text-neutral-900">
+                  Latvijas Republikas Uzņēmumu reģistrs — atzīts mantiskā ieguldījuma vērtētājs ar
+                  tiesībām vērtēt:
+                </div>
+                <ul className="mt-3 list-disc pl-5 space-y-2 text-neutral-700">
+                  <li>nemateriālos aktīvus un intelektuālo īpašumu (Intellectual Property);</li>
+                  <li>uzņēmumus (Business);</li>
+                  <li>parādsaistības un prasījuma tiesības (Debt/Claims);</li>
+                  <li>kapitāldaļas un akcijas (Equity/Shares);</li>
+                  <li>preču zīmes (Trademarks).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="border-t border-neutral-200">
+          <div className="mx-auto max-w-7xl px-6 py-14">
+            <div className="rounded-3xl border border-neutral-200 p-8 md:p-12 bg-white flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div className="max-w-2xl">
+                <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900">
+                  Sāksim ar īsu zvanu.
+                </h2>
+                <p className="mt-2 text-neutral-600">
+                  20 minūtes, lai saprastu situāciju un piedāvātu rīcības plānu.
+                </p>
+              </div>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium bg-neutral-900 text-white hover:opacity-90"
+              >
+                Pieteikt konsultāciju
+              </Link>
+            </div>
           </div>
         </section>
       </main>

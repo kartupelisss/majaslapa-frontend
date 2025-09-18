@@ -1,18 +1,11 @@
-// pages/_app.tsx
 import type { AppProps } from "next/app";
+import SiteLayout from "@/components/layouts/SiteLayout";
 import "@/styles/globals.css";
-import { Inter } from "next/font/google";
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <main className={inter.className}>
+    <SiteLayout>
       <Component {...pageProps} />
-    </main>
+    </SiteLayout>
   );
 }
