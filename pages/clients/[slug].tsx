@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { clientsData, type ClientItem } from "@/lib/clientsData";
 
+// ----------------- PAGE -----------------
 type Props = { client: ClientItem };
 
 export default function ClientDetail({ client }: Props) {
@@ -10,25 +11,18 @@ export default function ClientDetail({ client }: Props) {
     <>
       <Head>
         <title>{client.title} — Klienti — REMPE</title>
-        <meta
-          name="description"
-          content={`${client.title} — REMPE klientu segments`}
-        />
+        <meta name="description" content={`${client.title} — REMPE klientu segments`} />
       </Head>
 
       <main>
         {/* Hero */}
         <section className="mx-auto max-w-7xl px-6 pt-16 pb-8 lg:pt-24">
           <div className="max-w-3xl">
-            <div className="text-sm uppercase tracking-wide text-neutral-500">
-              Klientu segments
-            </div>
+            <div className="text-sm uppercase tracking-wide text-neutral-500">Klientu segments</div>
             <h1 className="mt-1 text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900">
               {client.title}
             </h1>
-            <p className="mt-4 text-neutral-700 whitespace-pre-line">
-              {client.short}
-            </p>
+            <p className="mt-4 text-neutral-700 whitespace-pre-line">{client.short}</p>
           </div>
         </section>
 
@@ -62,9 +56,13 @@ export default function ClientDetail({ client }: Props) {
   );
 }
 
-/** IMPORTANT: deduplikācija, lai nebūtu konflikta buildā */
+// ----------------- DATA -----------------
+import fs from "node:fs";
+import path from "node:path";
+
 export const getStaticPaths: GetStaticPaths = async () => {
-  const uniqueSlugs = Array.from(
+  // 1) Unikāli slugi no datiem
+  const fromData = Array.from(
     new Set(
       (clientsData ?? [])
         .map((c) => c?.slug?.trim())
@@ -72,9 +70,25 @@ export const getStaticPaths: GetStaticPaths = async () => {
     )
   );
 
+  // 2) Atrodam visus STATISKOS .tsx failus mapē /pages/clients (izņemot [slug].tsx)
+  //    un no datu slugiem izmetam tos, lai nebūtu ceļu pārklāšanās.
+  const clientsDir = path.join(process.cwd(), "pages", "clients");
+  let staticSlugs: string[] = [];
+  try {
+    staticSlugs = fs
+      .readdirSync(clientsDir)
+      .filter((f) => f !== "[slug].tsx" && f.endsWith(".tsx"))
+      .map((f) => f.replace(/\.tsx?$/i, "")); // "kripto.tsx" -> "kripto"
+  } catch {
+    // ja mapes nav – ok
+    staticSlugs = [];
+  }
+
+  const filtered = fromData.filter((slug) => !staticSlugs.includes(slug));
+
   return {
-    paths: uniqueSlugs.map((slug) => ({ params: { slug } })),
-    fallback: false, // vai 'blocking', ja vēlies
+    paths: filtered.map((slug) => ({ params: { slug } })),
+    fallback: false, // ja vajag: 'blocking'
   };
 };
 
