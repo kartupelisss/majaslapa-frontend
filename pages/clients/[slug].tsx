@@ -1,4 +1,3 @@
-// pages/clients/[slug].tsx
 import Head from "next/head";
 import Link from "next/link";
 import type { GetStaticPaths, GetStaticProps } from "next";
@@ -57,15 +56,24 @@ export default function ClientDetail({ client }: Props) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  // 1) Izvelkam slugus un deduplikojam (aizsardzībai pret dublikātiem datu avotā)
+  const uniqueSlugs = Array.from(
+    new Set(
+      (clientsData ?? [])
+        .map(c => c?.slug?.trim())
+        .filter(Boolean) as string[]
+    )
+  );
+
   return {
-    paths: clientsData.map((c) => ({ params: { slug: c.slug } })),
-    fallback: false,
+    paths: uniqueSlugs.map(slug => ({ params: { slug } })),
+    fallback: false, // vai 'blocking' – kā tev ērtāk
   };
 };
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const slug = String(params?.slug || "");
-  const client = clientsData.find((c) => c.slug === slug);
+  const client = clientsData.find(c => c.slug === slug);
   if (!client) return { notFound: true };
   return { props: { client } };
 };
