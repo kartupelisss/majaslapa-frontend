@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { highlights } from "@/lib/highlights";
+import { insights } from "@/lib/insightsData"; // << pievienots importam tikai News sekcijai
 
 type Item = { slug: string; title: string };
 
@@ -28,7 +29,6 @@ const SERVICE_ITEMS: Item[] = [
 ];
 
 // ------------------ MARŠRUTU KARTE PAKALPOJUMIEM ------------------
-// (tikai šis ir JAUNS, lai visi "Uzzināt vairāk" linki vienmēr ved uz īsto lapu)
 const SERVICE_ROUTE_BY_SLUG: Record<string, string> = {
   "nodoklu-konsultacijas": "/services/nodoklu-konsultacijas",
   "riski-planosana": "/services/riski-planosana",
@@ -391,7 +391,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Ziņas (placeholder) */}
+        {/* Ziņas — īstā sekcija no lib/insightsData */}
         <section className="border-t border-neutral-200">
           <div className="mx-auto max-w-7xl px-6 py-14">
             <div className="flex items-end justify-between flex-wrap gap-3">
@@ -408,22 +408,39 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[1, 2, 3].map((i) => (
-                <article key={i} className="rounded-2xl border border-neutral-200 bg-white p-6">
-                  <div className="text-xs text-neutral-500">Drīzumā</div>
-                  <h3 className="mt-2 text-[17px] font-semibold leading-snug text-neutral-900">
-                    Ziņas ieraksta nosaukums
-                  </h3>
-                  <p className="mt-2 text-sm text-neutral-600">
-                    Īss ievadraksts (2–3 rindas). Reālo saturu vēlāk ielasīsi no lib/insightsData.ts.
-                  </p>
-                  <Link href="/insights" className="mt-4 inline-block text-sm underline underline-offset-4">
-                    Lasīt vairāk
-                  </Link>
-                </article>
-              ))}
-            </div>
+            {(() => {
+              const items = [...insights]
+                .sort((a, b) => (a.date < b.date ? 1 : -1))
+                .slice(0, 3);
+
+              if (items.length === 0) return null;
+
+              return (
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {items.map((post) => (
+                    <article key={post.slug} className="rounded-2xl border border-neutral-200 bg-white p-6">
+                      <div className="text-xs text-neutral-500">
+                        {new Date(post.date).toLocaleDateString()}
+                      </div>
+                      <h3 className="mt-2 text-[17px] font-semibold leading-snug text-neutral-900 line-clamp-2">
+                        {post.title}
+                      </h3>
+                      {post.excerpt && (
+                        <p className="mt-2 text-sm text-neutral-600 line-clamp-3">
+                          {post.excerpt}
+                        </p>
+                      )}
+                      <Link
+                        href={`/insights/${post.slug}`}
+                        className="mt-4 inline-block text-sm underline underline-offset-4"
+                      >
+                        Lasīt vairāk
+                      </Link>
+                    </article>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
         </section>
 
@@ -445,8 +462,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        
       </main>
     </>
   );
