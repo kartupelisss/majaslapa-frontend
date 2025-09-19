@@ -13,9 +13,12 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+
+    "baseUrl": ".",                             // <- ŠIS PIETRŪKA
     "paths": {
-      "@/*": ["./*"]
-    }
+      "@/*": ["*"]                              // vai ["./*"] – abi ok ar baseUrl
+    },
+    "forceConsistentCasingInFileNames": true    // novērš Linux/Netlify reģistrjutības gļukus
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
