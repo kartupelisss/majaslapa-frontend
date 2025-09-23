@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { highlights } from "@/lib/highlights";
-import { insights } from "@/lib/insightsData"; // << pievienots importam tikai News sekcijai
+import { insights } from "@/lib/insightsData"; // << īstajai News sekcijai
 
 type Item = { slug: string; title: string };
 
@@ -40,7 +40,7 @@ const SERVICE_ROUTE_BY_SLUG: Record<string, string> = {
   argr: "/services/arpakalpojuma-gramatvediba",
 };
 
-// ------------------ ĪSIE apraksti (tavi teksti) ------------------
+// ------------------ ĪSIE apraksti ------------------
 const SHORT_BLURBS: Record<"pakalpojumi" | "klienti", Record<string, string>> = {
   klienti: {
     uznemumi: `
@@ -113,81 +113,25 @@ Mūsu pieeja apvieno grāmatvedības, nodokļu un juridiskās zināšanas; ar mo
   },
 };
 
-// ------------------ Unikāli bullet pointi (paliek kā iepriekš) ------------------
+// ------------------ Unikāli bullet pointi ------------------
 const BULLETS: Record<"pakalpojumi" | "klienti", Record<string, string[]>> = {
   pakalpojumi: {
-    "nodoklu-konsultacijas": [
-      "UIN, PVN, IIN piemērošana",
-      "Atzinumi un riska izvērtējumi",
-      "Starptautisku darījumu plānošana",
-    ],
-    "riski-planosana": [
-      "Tax health-check un atbilstības audits",
-      "PVN, UIN, darba spēka un TP riski",
-      "Nodokļu stratēģija ilgtspējīgai izaugsmei",
-    ],
-    "darijumu-strukture": [
-      "M&A un reorganizāciju modeļi",
-      "Holding/finansējuma/IP struktūras",
-      "Due diligence un ieviešana praksē",
-    ],
-    transfertcenas: [
-      "Local/Master File, CbCR",
-      "Ekonomiskā analīze un benchmark",
-      "APA/MAP atbalsts, pārstāvība",
-    ],
-    juridiskie: [
-      "Komerctiesību ikdienas atbalsts",
-      "M&A dokumentācija un sarunas",
-      "IP aizsardzība un licencēšana",
-    ],
-    "stridi-vid": [
-      "Iesniegumi un uzziņas",
-      "Auditi un pārrunas ar VID",
-      "Apstrīdēšana un tiesvedība",
-    ],
-    "vertesana-biznesa": [
-      "Biznesa un IP vērtēšana (IVS/LVS 401)",
-      "Finanšu modeļi un scenāriji",
-      "M&A un restrukturizācijas atbalsts",
-    ],
-    argr: [
-      "Pilns uzskaites cikls un deklarācijas",
-      "Algu un personāla uzskaite",
-      "Vadības atskaites un digitālie rīki",
-    ],
+    "nodoklu-konsultacijas": ["UIN, PVN, IIN piemērošana", "Atzinumi un riska izvērtējumi", "Starptautisku darījumu plānošana"],
+    "riski-planosana": ["Tax health-check un atbilstības audits", "PVN, UIN, darba spēka un TP riski", "Nodokļu stratēģija ilgtspējīgai izaugsmei"],
+    "darijumu-strukture": ["M&A un reorganizāciju modeļi", "Holding/finansējuma/IP struktūras", "Due diligence un ieviešana praksē"],
+    transfertcenas: ["Local/Master File, CbCR", "Ekonomiskā analīze un benchmark", "APA/MAP atbalsts, pārstāvība"],
+    juridiskie: ["Komerctiesību ikdienas atbalsts", "M&A dokumentācija un sarunas", "IP aizsardzība un licencēšana"],
+    "stridi-vid": ["Iesniegumi un uzziņas", "Auditi un pārrunas ar VID", "Apstrīdēšana un tiesvedība"],
+    "vertesana-biznesa": ["Biznesa un IP vērtēšana (IVS/LVS 401)", "Finanšu modeļi un scenāriji", "M&A un restrukturizācijas atbalsts"],
+    argr: ["Pilns uzskaites cikls un deklarācijas", "Algu un personāla uzskaite", "Vadības atskaites un digitālie rīki"],
   },
   klienti: {
-    uznemumi: [
-      "Ikdienas nodokļi, TP un M&A",
-      "VID komunikācija un strīdu risināšana",
-      "Vērtēšana un motivācijas programmas",
-    ],
-    "gimenes-privatpersonas": [
-      "Īpašumstruktūras un mantojuma plāns",
-      "Investīciju un ienākumu nodokļi",
-      "Konfidencialitāte un praktiski risinājumi",
-    ],
-    "starptautiskas-grupas": [
-      "Transfertcenu politika un dokumentācija",
-      "Dubultās aplikšanas novēršana",
-      "Restrukturizācija un PE riski",
-    ],
-    jaunuznemumi: [
-      "Investoru un opciju programmu struktūra",
-      "IP aizsardzība un licencēšana",
-      "Starptautiska mērogošana un PVN/VAT",
-    ],
-    "investiciju-fondi": [
-      "Struktūra un licencēšana (AIFMD/UCITS)",
-      "M&A un vērtēšana",
-      "Transfertcenas un iekšgrupas darījumi",
-    ],
-    kripto: [
-      "VASP/PSP licencēšana un AML/KYC",
-      "Nodokļi: tirdzniecība, staking, DeFi",
-      "Starptautiskas struktūras un TP",
-    ],
+    uznemumi: ["Ikdienas nodokļi, TP un M&A", "VID komunikācija un strīdu risināšana", "Vērtēšana un motivācijas programmas"],
+    "gimenes-privatpersonas": ["Īpašumstruktūras un mantojuma plāns", "Investīciju un ienākumu nodokļi", "Konfidencialitāte un praktiski risinājumi"],
+    "starptautiskas-grupas": ["Transfertcenu politika un dokumentācija", "Dubultās aplikšanas novēršana", "Restrukturizācija un PE riski"],
+    jaunuznemumi: ["Investoru un opciju programmu struktūra", "IP aizsardzība un licencēšana", "Starptautiska mērogošana un PVN/VAT"],
+    "investiciju-fondi": ["Struktūra un licencēšana (AIFMD/UCITS)", "M&A un vērtēšana", "Transfertcenas un iekšgrupas darījumi"],
+    kripto: ["VASP/PSP licencēšana un AML/KYC", "Nodokļi: tirdzniecība, staking, DeFi", "Starptautiskas struktūras un TP"],
   },
 };
 
@@ -209,9 +153,7 @@ function Segmented({
             onClick={() => onChange(key)}
             className={
               "px-4 py-2 rounded-full text-sm transition " +
-              (active
-                ? "bg-neutral-900 text-white"
-                : "text-neutral-700 hover:bg-white")
+              (active ? "bg-neutral-900 text-white" : "text-neutral-700 hover:bg-white")
             }
           >
             {key === "pakalpojumi" ? "Pakalpojumi" : "Klienti"}
@@ -245,9 +187,7 @@ function LeftList({
               onClick={() => onSelect(it.slug)}
               className={
                 "w-full text-left px-4 py-3 rounded-xl border transition mb-2 " +
-                (isActive
-                  ? "bg-neutral-100 border-neutral-300"
-                  : "bg-white border-neutral-200 hover:bg-neutral-50")
+                (isActive ? "bg-neutral-100 border-neutral-300" : "bg-white border-neutral-200 hover:bg-neutral-50")
               }
             >
               {it.title}
@@ -272,7 +212,6 @@ export default function Home() {
 
   const current = items.find((x) => x.slug === safeActive)!;
 
-  // ← Šī rinda IR mainīta: izmantojam maršrutu karti pakalpojumiem
   const ctaHref =
     tab === "klienti"
       ? `/clients/${current.slug}`
@@ -286,11 +225,17 @@ export default function Home() {
       ? "Konsultējam un pārstāvam nodokļu jautājumos — no ikdienas PVN situācijām līdz sarežģītiem pārrobežu darījumiem un strīdiem ar VID."
       : "Strādājam ar dažādu tipu klientiem — no ģimenes uzņēmumiem un jaunuzņēmumiem līdz starptautiskām grupām un fondiem.";
 
+  // >>> modālis kontaktinformācijai
+  const [showContacts, setShowContacts] = useState(false);
+
   return (
     <>
       <Head>
         <title>Juridiskā un nodokļu izcilība jūsu biznesa izaugsmei — REMPE</title>
-        <meta name="description" content="Mēs apvienojam ekspertīzi, precizitāti un stratēģisku skatījumu, lai palīdzētu jūsu biznesam augt." />
+        <meta
+          name="description"
+          content="Mēs apvienojam ekspertīzi, precizitāti un stratēģisku skatījumu, lai palīdzētu jūsu biznesam augt."
+        />
         <meta property="og:type" content="website" />
       </Head>
 
@@ -307,10 +252,18 @@ export default function Home() {
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <Link href="/contact" className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium bg-neutral-900 text-white hover:opacity-90">
+              {/* Sazināties -> atver kontaktu modāli */}
+              <button
+                onClick={() => setShowContacts(true)}
+                className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium bg-neutral-900 text-white hover:opacity-90"
+              >
                 Sazināties
-              </Link>
-              <Link href="/contact" className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium border border-neutral-200 hover:bg-neutral-50">
+              </button>
+              {/* Saņemt piedāvājumu -> uz zvana CTA apakšā */}
+              <Link
+                href="#call"
+                className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium border border-neutral-200 hover:bg-neutral-50"
+              >
                 Saņemt piedāvājumu
               </Link>
             </div>
@@ -333,6 +286,56 @@ export default function Home() {
             <p className="mt-3 text-neutral-600">{kicker}</p>
           </div>
         </section>
+
+        {/* Kontaktu modālis */}
+        {showContacts && (
+          <div
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 px-4"
+            role="dialog"
+            aria-modal="true"
+            onClick={() => setShowContacts(false)}
+          >
+            <div
+              className="w-full max-w-sm rounded-2xl border border-neutral-200 bg-white p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start justify-between">
+                <h3 className="text-lg font-semibold text-neutral-900">Sazinies ar mums</h3>
+                <button
+                  onClick={() => setShowContacts(false)}
+                  className="rounded-full p-1 text-neutral-500 hover:bg-neutral-100"
+                  aria-label="Aizvērt"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="mt-4 space-y-3 text-sm">
+                <a
+                  href="tel:+37120000000"
+                  className="block rounded-xl border border-neutral-200 px-4 py-2 hover:bg-neutral-50"
+                >
+                  <div className="text-neutral-500">Tālrunis</div>
+                  <div className="font-medium text-neutral-900">+371 2000 0000</div>
+                </a>
+                <a
+                  href="mailto:info@rempe.lv"
+                  className="block rounded-xl border border-neutral-200 px-4 py-2 hover:bg-neutral-50"
+                >
+                  <div className="text-neutral-500">E-pasts</div>
+                  <div className="font-medium text-neutral-900">info@rempe.lv</div>
+                </a>
+              </div>
+
+              <button
+                onClick={() => setShowContacts(false)}
+                className="mt-5 w-full rounded-full bg-neutral-900 px-4 py-2.5 text-sm font-medium text-white hover:opacity-90"
+              >
+                Aizvērt
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Divkolonnu bloks */}
         <section className="mx-auto max-w-7xl px-6 pb-12">
@@ -409,10 +412,7 @@ export default function Home() {
             </div>
 
             {(() => {
-              const items = [...insights]
-                .sort((a, b) => (a.date < b.date ? 1 : -1))
-                .slice(0, 3);
-
+              const items = [...insights].sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 3);
               if (items.length === 0) return null;
 
               return (
@@ -426,9 +426,7 @@ export default function Home() {
                         {post.title}
                       </h3>
                       {post.excerpt && (
-                        <p className="mt-2 text-sm text-neutral-600 line-clamp-3">
-                          {post.excerpt}
-                        </p>
+                        <p className="mt-2 text-sm text-neutral-600 line-clamp-3">{post.excerpt}</p>
                       )}
                       <Link
                         href={`/insights/${post.slug}`}
@@ -445,7 +443,7 @@ export default function Home() {
         </section>
 
         {/* CTA */}
-        <section className="border-t border-neutral-200">
+        <section id="call" className="border-t border-neutral-200">
           <div className="mx-auto max-w-7xl px-6 py-14">
             <div className="rounded-3xl border border-neutral-200 p-8 md:p-12 bg-white flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div className="max-w-2xl">
@@ -456,7 +454,10 @@ export default function Home() {
                   20 minūtes, lai saprastu situāciju un piedāvātu rīcības plānu.
                 </p>
               </div>
-              <Link href="/contact" className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium bg-neutral-900 text-white hover:opacity-90">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-medium bg-neutral-900 text-white hover:opacity-90"
+              >
                 Pieteikt konsultāciju
               </Link>
             </div>
