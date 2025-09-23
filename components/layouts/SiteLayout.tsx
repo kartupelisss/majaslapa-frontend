@@ -1,13 +1,20 @@
 import type { ReactNode } from "react";
-import Navbar from "@/components/Navbar";      // <- tavs esošais navbar/megamenu
-import Footer from "@/components/Footer";      // <- tas zilais Footer.tsx, ko jau saglabāji
+import { useRouter } from "next/router";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
+  const { pathname } = useRouter();
+
+  // šeit uzskaiti lapas, kurās nevajag header/footer
+  const HIDE_CHROME_ROUTES = ["/unlock"];
+  const hideChrome = HIDE_CHROME_ROUTES.includes(pathname);
+
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      {!hideChrome && <Navbar />}
       <main className="flex-1">{children}</main>
-      <Footer />
+      {!hideChrome && <Footer />}
     </div>
   );
 }
