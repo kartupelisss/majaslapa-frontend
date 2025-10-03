@@ -1,10 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import Link from "next/link";
-
 export default function BrandMark() {
   return (
-    <Link href="/" aria-label="Sākumlapa" className="flex items-center">
-      {/* Fiksēts izmērs + overflow control — header vairs neizstiepjas */}
+    // tikai logo vizuālais bloks — BEZ <Link>
+    <div className="flex items-center">
       <div className="h-10 md:h-12 w-[220px] md:w-[260px] flex items-center overflow-hidden">
         <img
           src="/logo-rempe.jpg"
@@ -14,7 +12,6 @@ export default function BrandMark() {
           decoding="async"
         />
       </div>
-      <span className="sr-only">REMPE</span>
-    </Link>
+    </div>
   );
 }

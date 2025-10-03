@@ -7,7 +7,7 @@ export default function MegaMenu() {
   const panelRef = React.useRef<HTMLDivElement | null>(null);
   const hideTimer = React.useRef<number | null>(null);
 
-  // helpers: atvērt/ieplānot aizvēršanu ar nelielu kavējumu
+  // Atver uzreiz (un atceļ ieplānoto aizvēršanu)
   const openMenu = React.useCallback(() => {
     if (hideTimer.current) {
       window.clearTimeout(hideTimer.current);
@@ -16,6 +16,7 @@ export default function MegaMenu() {
     setOpen(true);
   }, []);
 
+  // Ieplāno aizvēršanu ar nelielu kavējumu (lai lietotājs var kustēties starp trigger un paneli)
   const scheduleClose = React.useCallback((delay = 220) => {
     if (hideTimer.current) window.clearTimeout(hideTimer.current);
     hideTimer.current = window.setTimeout(() => {
@@ -24,6 +25,7 @@ export default function MegaMenu() {
     }, delay);
   }, []);
 
+  // Click ārpusē + Escape
   React.useEffect(() => {
     function onDocClick(e: MouseEvent) {
       if (!open) return;
@@ -46,14 +48,13 @@ export default function MegaMenu() {
   return (
     <div
       className="relative"
-      // svarīgi: wrapper-ā ieplānojam aizvēršanu ar kavējumu
       onMouseLeave={() => scheduleClose(220)}
       onMouseEnter={openMenu}
     >
       {/* Trigger */}
       <button
         ref={triggerRef}
-        className="inline-flex items-center gap-1 text-[15px] leading-none"
+        className={`mega-trigger inline-flex items-center gap-1 text-[15px] leading-none ${open ? "open" : ""}`}
         onMouseEnter={openMenu}
         onClick={() => (open ? scheduleClose(0) : openMenu())}
         aria-haspopup="menu"
@@ -61,9 +62,7 @@ export default function MegaMenu() {
       >
         Pakalpojumi
         <svg
-          className={`h-4 w-4 transition-transform duration-200 ${
-            open ? "rotate-180" : ""
-          }`}
+          className={`h-4 w-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           viewBox="0 0 20 20"
           fill="currentColor"
           aria-hidden="true"
@@ -79,22 +78,24 @@ export default function MegaMenu() {
       {/* Panelis */}
       <div
         ref={panelRef}
-        onMouseEnter={openMenu}            // ienākot panelī – atceļam aizvēršanu
-        onMouseLeave={() => scheduleClose(220)} // izejot – ieplānojam aizvēršanu
+        onMouseEnter={openMenu}
+        onMouseLeave={() => scheduleClose(220)}
         className={[
-          "absolute left-1/2 -translate-x-1/2 mt-3 z-50",
-          "w-[980px] max-w-[95vw]",
-          "rounded-2xl border border-neutral-200 bg-white shadow-xl",
-          "transition-all duration-200",
+          "absolute left-1/2 -translate-x-1/2 mt-3 z-50 w-[980px] max-w-[95vw]",
+          "rounded-2xl border shadow-xl transition-all duration-200",
+          // Custom tumši zilais panelis ar baltiem linkiem
+          "mega-panel",
           open
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 -translate-y-1 pointer-events-none",
         ].join(" ")}
+        role="menu"
+        aria-label="Pakalpojumi"
       >
         <div className="grid grid-cols-12 gap-6 p-6">
           {/* Kolonna 1 */}
           <div className="col-span-4">
-            <div className="px-1 pb-2 text-sm font-medium text-neutral-500">
+            <div className="mega-heading px-1 pb-2 text-sm font-medium">
               Klienti
             </div>
             <ul className="space-y-2">
@@ -109,7 +110,7 @@ export default function MegaMenu() {
 
           {/* Kolonna 2 */}
           <div className="col-span-5">
-            <div className="px-1 pb-2 text-sm font-medium text-neutral-500">
+            <div className="mega-heading px-1 pb-2 text-sm font-medium">
               Pakalpojumi
             </div>
             <ul className="space-y-2">
@@ -124,19 +125,22 @@ export default function MegaMenu() {
             </ul>
           </div>
 
-          {/* Kolonna 3 – izceltais */}
+          {/* Kolonna 3 – izceltā publikācija */}
           <div className="col-span-3">
-            <div className="px-1 pb-2 text-sm font-medium text-neutral-500">
+            <div className="mega-heading px-1 pb-2 text-sm font-medium">
               Publikācija
             </div>
+
+            {/* Svarīgi: izmantojam tikai .mega-card (pārējo izdarīs CSS) */}
             <Link
               href="/insights/pvn-kedes-risku-samazinasana-e-komercija"
-              className="block rounded-xl border border-neutral-200 p-4 hover:bg-neutral-50"
+              className="mega-card block p-4"
+              role="menuitem"
             >
-              <div className="text-[15px] font-medium">
+              <div className="mega-card-title text-[15px] font-medium">
                 Praktiski padomi: PVN un pārrobežu darījumu riski
               </div>
-              <div className="mt-2 text-sm underline underline-offset-4">
+              <div className="mega-card-cta mt-2 text-sm">
                 Lasīt vairāk
               </div>
             </Link>
@@ -151,7 +155,8 @@ function NavItem({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="block rounded-lg px-3 py-2 text-[15px] leading-5 hover:bg-neutral-50"
+      className="mega-link block rounded-lg px-3 py-2 text-[15px] leading-5"
+      role="menuitem"
     >
       {label}
     </Link>

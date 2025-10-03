@@ -1,11 +1,25 @@
 @import "tailwindcss";
 
-/* Tīrs gaišais fonds (L&L sajūta) */
+/* =========================
+   REMPE dizaina pamata mainīgie
+   ========================= */
+
+/* Tīrs gaišais fonds (L&L sajūta) + REMPE krāsas */
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --muted: #6b7280;       /* ~ neutral-500 */
-  --line: #e5e7eb;        /* ~ neutral-200 */
+  /* Pamatkrāsas (tavas) */
+  --brand: #1D2D50;          /* tumši zilais – primārā */
+  --brand-foreground: #FFFFFF;
+
+  --background: #FFFFFF;     /* baltais – pamatfons */
+  --foreground: #0A0A0A;
+
+  --bg-muted: #F5F5F5;       /* gaiši pelēks – sekciju foni */
+  --accent: #C9A646;         /* zelts – akcentiem (varēsi ērti nomainīt) */
+  --accent-foreground: #111111;
+
+  --muted: #6B7280;          /* ~ neutral-500 (teksts sekundārais) */
+  --line: #E5E7EB;           /* ~ neutral-200 (bordere) */
+  --shadow: 0 10px 30px rgba(0,0,0,0.06);
 }
 
 html, body { height: 100%; }
@@ -18,23 +32,507 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Virsrakstu balansēšana, šaurāks teikums */
-h1, h2 { text-wrap: balance; }
-
-/* “Prose” helperis rakstiem */
-.prose { max-width: 65ch; }
-
-/* Multimediji */
-img, video { max-width: 100%; height: auto; }
+html { scroll-behavior: smooth; }
 
 /* Atlase */
 ::selection { background: rgba(17,24,39,.08); }
 
-/* Smalkāks links pēc noklusējuma */
-a { text-decoration: none; }
+/* Linki pieticīgi pēc noklusējuma; akcentu piešķirs "link-accent" */
+a { text-decoration: none; color: inherit; }
 a:hover { text-decoration: none; }
-
-html { scroll-behavior: smooth; }
 
 /* lai enkurs nepaslēptos aiz sticky header: */
 :target { scroll-margin-top: 80px; }
+
+/* =========================
+   Tipogrāfija / Prose
+   ========================= */
+
+/* Virsrakstu balansēšana, šaurāks teikums */
+h1, h2 { text-wrap: balance; }
+
+/* Prose helperis rakstiem (garās lapas) */
+.prose {
+  max-width: 65ch;
+  --p: 1.05rem;
+  --lh: 1.7;
+  --h1: 2.0rem; /* ~32px */
+  --h2: 1.5rem; /* ~24px */
+  --h3: 1.25rem;/* ~20px */
+  color: var(--foreground);
+}
+.prose p { font-size: var(--p); line-height: var(--lh); margin: .85rem 0; color: var(--foreground); }
+.prose h1 { font-size: var(--h1); font-weight: 700; letter-spacing: -0.01em; margin: 1.8rem 0 .6rem; color: #0B1222; }
+.prose h2 { font-size: var(--h2); font-weight: 700; margin: 1.6rem 0 .5rem; color: #0B1222; }
+.prose h3 { font-size: var(--h3); font-weight: 600; margin: 1.2rem 0 .4rem; color: #14203E; }
+.prose ul { list-style: disc; padding-left: 1.2rem; margin: .6rem 0 .8rem; }
+.prose ol { list-style: decimal; padding-left: 1.2rem; margin: .6rem 0 .8rem; }
+.prose a { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
+.prose a:hover { color: var(--accent); }
+.prose blockquote {
+  border-left: 3px solid var(--accent);
+  margin: 1rem 0; padding: .5rem 1rem; color:#2b2b2b; background:#fff;
+  border-radius: .5rem;
+}
+
+/* Multimediji */
+img, video { max-width: 100%; height: auto; }
+
+/* =========================
+   UI util-klases (ātrai pielietošanai JSX)
+   ========================= */
+
+/* Stipra virsma (headeri kreisajās kolonnās u.c.) */
+.surface-strong {
+  background: var(--brand);
+  color: #fff;
+}
+
+/* Kartes/paneļi – baltā virsma ar borderi */
+.surface {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+}
+
+/* Maigs fons (sekciju atdalīšanai vai aktīvajiem itemiem) */
+.surface-muted {
+  background: var(--bg-muted);
+  border: 1px solid var(--line);
+  border-radius: 1.0rem;
+}
+
+/* Primārā poga */
+.btn-primary {
+  background: var(--brand);
+  color: var(--brand-foreground);
+  border-radius: 9999px;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  transition: opacity .2s ease, box-shadow .2s ease, transform .02s ease;
+}
+.btn-primary:hover { opacity: .92; }
+.btn-primary:active { transform: translateY(0.5px); }
+
+/* Outline poga */
+.btn-outline {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--foreground);
+  border-radius: 9999px;
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+  transition: box-shadow .2s ease, transform .02s ease;
+}
+.btn-outline:hover { box-shadow: var(--shadow); }
+.btn-outline:active { transform: translateY(0.5px); }
+
+/* Link ar akcentu (zelta hover) */
+.link-accent {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.link-accent:hover { color: var(--accent); }
+
+/* Akcenti (ikonas/cipari) un border-akcents */
+.accent { color: var(--accent); }
+.border-accent { border-color: var(--accent); }
+/* ===== REMPE krāsu pārrakstīšana uz jau esošajām Tailwind klasēm ===== */
+
+/* Primārā tumšā (bg-neutral-900) -> REMPE zils */
+.bg-neutral-900,
+.hover\:bg-neutral-900:hover {
+  background-color: var(--brand) !important;
+}
+
+/* Muted foni (bg-neutral-50/100) -> REMPE gaiši pelēks */
+.bg-neutral-50,
+.hover\:bg-neutral-50:hover {
+  background-color: var(--bg-muted) !important;
+}
+.bg-neutral-100,
+.hover\:bg-neutral-100:hover {
+  background-color: var(--bg-muted) !important;
+}
+
+/* Robežas */
+.border-neutral-200 { border-color: var(--line) !important; }
+.border-neutral-300 { border-color: var(--line) !important; }
+
+/* Sekundārie teksti */
+.text-neutral-700,
+.text-neutral-600,
+.text-neutral-500 { color: var(--muted) !important; }
+
+/* Linku hover akcents (underline elementi) -> zelts */
+a.underline:hover,
+.underline:hover { color: var(--accent) !important; }
+
+/* ===== REMPE header & mega-menu paletes util-klases ===== */
+
+/* Header linkiem (tumši zils -> zelts hoverā) */
+.nav-link { color: var(--brand); transition: color .15s ease; }
+.nav-link:hover { color: var(--accent); }
+
+/* MegaMenu tumši zilais panelis ar baltu tipogrāfiju */
+.mega-panel {
+  background: var(--brand);
+  color: #fff;
+  border-color: transparent !important; /* noņem pelēko borderi */
+}
+
+/* Sīkie virsraksti paneļa iekšpusē */
+.mega-heading { color: rgba(255,255,255,.75); }
+
+/* Linki panelī: balti, hover zelts + neliels balts pārklājums */
+.mega-link {
+  color: #fff;
+  transition: color .15s ease, background-color .15s ease;
+}
+.mega-link:hover {
+  color: var(--accent);
+  background: rgba(255,255,255,.08);
+}
+
+/* Izceltā kartīte labajā kolonnā: balts uz zilā paneļa */
+.mega-card {
+  background: #fff;
+  color: var(--brand);
+  border-color: rgba(255,255,255,.25);
+  transition: transform .12s ease, box-shadow .2s ease;
+}
+.mega-card:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+.mega-card .readmore { color: var(--brand); text-decoration: underline; text-underline-offset: 4px; }
+.mega-card .readmore:hover { color: var(--accent); }
+
+/* Papildus: dropdown bultiņa — lai manto krāsu pareizi */
+.mega-trigger { color: var(--brand); }
+.mega-trigger.open { color: var(--accent); }
+
+/* ===== UNIVERSĀLA REMPE KRĀSU SHEMA (bez React failu maiņas) ===== */
+
+/* 1) Noklusētais teksts -> tumši zils */
+body { color: var(--brand); }
+.text-neutral-900 { color: var(--brand) !important; }
+.text-neutral-800 { color: var(--brand) !important; }
+/* Sekundārais teksts — maigi pelēks */
+.text-neutral-700, .text-neutral-600, .text-neutral-500 { color: var(--muted) !important; }
+
+/* 2) Sadaļu foni */
+.bg-white { background-color: #FFFFFF !important; }
+.bg-neutral-50, .bg-neutral-100,
+.hover\:bg-neutral-50:hover, .hover\:bg-neutral-100:hover { background-color: var(--bg-muted) !important; }
+
+/* 3) Bordere vienotas */
+.border-neutral-200, .border-neutral-300 { border-color: var(--line) !important; }
+
+/* 4) VISAS “tumšās” zonas (kas bija bg-neutral-900) -> REMPE tumši zilais, teksts balts */
+.bg-neutral-900, .hover\:bg-neutral-900:hover {
+  background-color: var(--brand) !important;
+  color: #fff !important;
+}
+
+/* 5) POGAS — zelta hover visiem tumšajiem */
+.bg-neutral-900:hover, .btn-primary:hover {
+  background-color: var(--accent) !important;
+  color: var(--accent-foreground) !important; /* tumšs teksts uz zelta */
+}
+/* Outline pogas hover — palielinam kontrastu & zeltu linkos */
+.btn-outline:hover { box-shadow: var(--shadow); border-color: var(--accent) !important; }
+a.underline:hover, .underline:hover, .link-accent:hover { color: var(--accent) !important; }
+
+/* 6) HEADER (nav) linki — tumši zili, hover zelts */
+.nav-link { color: var(--brand); transition: color .15s ease; }
+.nav-link:hover { color: var(--accent); }
+/* Megamenu tumši zils, balts teksts + zelts hover (no iepriekšējā soļa) */
+.mega-panel { background: var(--brand); color:#fff; border-color: transparent !important; }
+.mega-heading { color: rgba(255,255,255,.75); }
+.mega-link { color:#fff; transition: color .15s, background-color .15s; }
+.mega-link:hover { color: var(--accent); background: rgba(255,255,255,.08); }
+
+/* 7) “Kāpēc REMPE?” un “Jaunākās ziņas” — virsraksti zilā, kartes baltas uz pelēka fona */
+section .tracking-tight, section h2, section h3 { color: var(--brand) !important; }
+
+/* 8) APRAKSTU KASTES (labā kolonna) — teksts tumši zils, bullets pelēki */
+.rounded-3xl.bg-white.p-6, .surface { color: var(--brand) !important; }
+.rounded-3xl.bg-white p, .surface p,
+.rounded-3xl.bg-white li, .surface li { color: var(--muted) !important; }
+
+/* 9) APakšējais CTA bloks — poga tumši zila ar zelta hover */
+#call .bg-white .bg-neutral-900 { background-color: var(--brand) !important; }
+#call .bg-white .bg-neutral-900:hover { background-color: var(--accent) !important; color: var(--accent-foreground) !important; }
+
+/* 10) FOOTER — tumši zils fons, balta tipogrāfija, zelta hover */
+footer, .site-footer {
+  background: var(--brand) !important;
+  color: #FFFFFF !important;
+}
+footer a, .site-footer a { color: #FFFFFF !important; text-decoration: none; }
+footer a:hover, .site-footer a:hover { color: var(--accent) !important; }
+footer .btn, .site-footer .btn, footer .bg-neutral-900, .site-footer .bg-neutral-900 {
+  background: #FFFFFF !important; color: var(--brand) !important; border: none !important;
+}
+footer .btn:hover, .site-footer .btn:hover,
+footer .bg-neutral-900:hover, .site-footer .bg-neutral-900:hover {
+  background: var(--accent) !important; color: var(--accent-foreground) !important;
+}
+
+/* 11) Segmented switch — aktīvais pills tumši zils ar baltu tekstu */
+.inline-flex.rounded-full.border.p-1 button.bg-neutral-900 { background: var(--brand) !important; color:#fff !important; }
+
+/* ===============================
+   REMPE — spēcīgāka krāsu dinamika
+   =============================== */
+
+/* Virsraksti (globāli) */
+h1, h2, h3, .tracking-tight { color: var(--brand) !important; }
+
+/* Sekcijas “Kāpēc REMPE?” (pelēks fons + baltas kartes) */
+section.border-t + .mx-auto, /* drošs fallback selektors dažām struktūrām */
+section .surface,
+section .rounded-2xl.bg-white {
+  /* kartes jau baltas; tikai uzlabojam hover */
+}
+section .rounded-2xl.bg-white:hover,
+section .surface:hover {
+  box-shadow: var(--shadow);
+  border-color: var(--brand) !important;
+}
+
+/* “Jaunākās ziņas” kartītēm – virsraksts zils, links zelta hover */
+article.rounded-2xl.bg-white h3 { color: var(--brand) !important; }
+article.rounded-2xl.bg-white a.link,
+article.rounded-2xl.bg-white a.underline,
+article.rounded-2xl.bg-white a {
+  color: var(--brand);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+article.rounded-2xl.bg-white a:hover { color: var(--accent) !important; }
+
+/* Divkolonnu labās kastes (apraksti) – teksts zils, bullets pelēki */
+.md\:col-span-2.rounded-3xl.bg-white,
+.md\:col-span-2.surface,
+.md\:col-span-2.rounded-3xl {
+  color: var(--brand) !important;
+}
+.md\:col-span-2.rounded-3xl.bg-white p,
+.md\:col-span-2.rounded-3xl.bg-white li {
+  color: var(--muted) !important;
+}
+
+/* CTA apakšā – poga tumši zila, hover zelts (ar kontrastējošu tekstu) */
+#call a.bg-neutral-900,
+#call a.btn-primary {
+  background-color: var(--brand) !important;
+  color: #fff !important;
+}
+#call a.bg-neutral-900:hover,
+#call a.btn-primary:hover {
+  background-color: var(--accent) !important;
+  color: var(--accent-foreground) !important;
+}
+
+/* Segmented switch – aktīvais pills tumši zils ar baltiem burtiem */
+.inline-flex.rounded-full.border.p-1 button.bg-neutral-900 {
+  background: var(--brand) !important;
+  color: #fff !important;
+}
+
+/* Header (nav) linki — tumši zili, hover zelts (ja neesi jau pievienojis .nav-link) */
+header nav a { color: var(--brand); transition: color .15s ease; }
+header nav a:hover { color: var(--accent); }
+
+/* MegaMenu (no iepriekšējā soļa) — tumši zils panelis ar baltiem linkiem un zelta hover */
+.mega-panel { background: var(--brand); color:#fff; border-color: transparent !important; }
+.mega-heading { color: rgba(255,255,255,.75); }
+.mega-link { color:#fff; transition: color .15s ease, background-color .15s ease; }
+.mega-link:hover { color: var(--accent); background: rgba(255,255,255,.08); }
+
+/* ===============================
+   FOOTER — tumši zils fons, balts teksts, zelts hover
+   =============================== */
+footer, .site-footer {
+  background: var(--brand) !important;
+  color: #FFFFFF !important;
+}
+footer a, .site-footer a { color: #FFFFFF !important; text-decoration: none; }
+footer a:hover, .site-footer a:hover { color: var(--accent) !important; }
+
+/* Footer ievades: gaiši caurspīdīgs baltais ar baltu kontūru */
+footer input[type="email"],
+footer input[type="text"],
+.site-footer input[type="email"],
+.site-footer input[type="text"] {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.4);
+  color: #fff;
+  border-radius: 9999px;
+  padding: .6rem .9rem;
+}
+footer input::placeholder,
+.site-footer input::placeholder { color: rgba(255,255,255,.7); }
+
+/* Footer poga: skaidri saskatāma (ne “balts uz balta”) */
+footer button[type="submit"],
+footer .btn,
+footer .rounded-full,
+.site-footer button[type="submit"],
+.site-footer .btn,
+.site-footer .rounded-full {
+  background: #FFFFFF !important;
+  color: var(--brand) !important;
+  border: none !important;
+  border-radius: 9999px;
+  padding: .6rem 1rem;
+  font-weight: 600;
+  transition: background-color .15s ease, color .15s ease, transform .02s ease;
+}
+footer button[type="submit"]:hover,
+footer .btn:hover,
+footer .rounded-full:hover,
+.site-footer button[type="submit"]:hover,
+.site-footer .btn:hover,
+.site-footer .rounded-full:hover {
+  background: var(--accent) !important;
+  color: var(--accent-foreground) !important;
+}
+
+/* Drošības tīklam — ja footer CTA poga bija ar .bg-neutral-900, pārrakstām */
+footer .bg-neutral-900 {
+  background: #FFFFFF !important;
+  color: var(--brand) !important;
+}
+footer .bg-neutral-900:hover {
+  background: var(--accent) !important;
+  color: var(--accent-foreground) !important;
+}
+
+/* ==== MegaMenu: padarām paneli skaidri salasāmu ==== */
+.mega-panel { background: var(--brand) !important; color:#fff !important; border-color: transparent !important; }
+.mega-panel * { color: #fff; } /* balts iekš panel */
+.mega-heading { color: rgba(255,255,255,.75) !important; }
+.mega-link { color:#fff; transition: color .15s ease, background-color .15s ease; }
+.mega-link:hover { color: var(--accent) !important; background: rgba(255,255,255,.08); }
+.mega-trigger { color: var(--brand); } .mega-trigger.open { color: var(--accent); }
+
+/* ==== “Publikācija” karte ar zelta akcentu ==== */
+.mega-panel .mega-card {
+  position: relative;
+  background: #fff;
+  color: var(--brand);
+  border: 1px solid rgba(255,255,255,.25);
+  box-shadow: 0 10px 24px rgba(0,0,0,.12);
+  transition: transform .12s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.mega-panel .mega-card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; right: 0; height: 4px;
+  background: var(--accent);               /* zelts */
+  border-top-left-radius: 12px;            /* saskaņā ar .rounded-xl */
+  border-top-right-radius: 12px;
+}
+.mega-panel .mega-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0,0,0,.18);
+  border-color: rgba(201,166,70,.65);
+}
+.mega-panel .mega-card-title { color: var(--brand) !important; }
+.mega-panel .mega-card-cta { color: var(--brand) !important; text-decoration: underline; text-underline-offset: 4px; }
+.mega-panel .mega-card-cta:hover { color: var(--accent) !important; }
+
+/* MegaMenu izceltā kartīte (Publikācija) */
+.mega-card {
+  background: var(--brand);          /* tumši zilais fons */
+  color: #fff;                       /* balts teksts */
+  border: 2px solid #fff;            /* balts perimetrs */
+  border-radius: 0.75rem;            /* noapaļoti stūri */
+  transition: transform .12s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+.mega-card:hover {
+  background: var(--accent);         /* hover – zelta fons */
+  color: var(--accent-foreground);   /* tumšs teksts uz zelta */
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+/* Kartītes iekšējais link-texts */
+.mega-card .readmore {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.mega-card:hover .readmore {
+  color: var(--accent-foreground);   /* pāriet uz tumšu hoverā */
+}
+/* MegaMenu virsraksta tonis labajā kolonnā */
+.mega-heading { color: rgba(255,255,255,.85) !important; }
+
+/* Publikācijas kartīte: zils pildījums, balts perimetrs, balts teksts */
+.mega-card {
+  background: var(--brand) !important; /* tumši zilais pildījums */
+  color: #fff !important;               /* balts teksts */
+  border: 2px solid #fff !important;    /* balts perimetrs */
+  border-radius: 0.75rem;               /* kā rounded-xl */
+  box-shadow: none !important;          /* noņem jebkuras iepriekšējas ēnas */
+  transition: transform .12s ease, box-shadow .2s ease;
+}
+
+/* Balts teksts visiem bērniem iekšā (drošībai) */
+.mega-card * { color: #fff !important; }
+
+/* “Lasīt vairāk” links – balts + underline, paliek balts arī hoverā */
+.mega-card .readmore {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Viegla animācija hoverā (NE mainām krāsu!) */
+.mega-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+/* === MegaMenu: Publikācijas kārte — zils iekšpusē, balts perimetrs, balts teksts === */
+.mega-card::before,
+.mega-card::after {
+  /* ja kur palicis kāds dekoratīvs strīps – izslēdzam */
+  display: none !important;
+  content: none !important;
+}
+
+.mega-card {
+  background: var(--brand) !important;      /* tumši zilais iekšpusē */
+  color: #fff !important;                    /* balts teksts */
+  border: 2px solid #fff !important;         /* balts perimetrs */
+  border-radius: 0.75rem !important;         /* ~ rounded-xl */
+  box-shadow: none !important;
+  transition: transform .12s ease, box-shadow .2s ease;
+}
+
+.mega-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+/* Piespiežam balto arī bērniem un hoverā (lai nepārzīmējas uz zeltu) */
+.mega-card .mega-card-title,
+.mega-card .mega-card-cta,
+.mega-card .mega-card-title:hover,
+.mega-card .mega-card-cta:hover {
+  color: #fff !important;
+}
+
+/* Ja "Lasīt vairāk" ir ar underline klasēm, paturam baltu */
+.mega-card .mega-card-cta {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  opacity: .95;
+}
+
+/* (Drošībai) ja kāda globālā underline:hover pārraksta uz zeltu, ignorējam mega-card iekšienē */
+.mega-card a.underline:hover,
+.mega-card .underline:hover {
+  color: #fff !important;
+}

@@ -11,25 +11,21 @@ export default function Navbar() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8 text-[15px]">
-          <Link href="/about">Birojs</Link>
-          <Link href="/about#team">Par mums</Link>
-
-          {/* Jaunā mega-izvēlne */}
+          <Link href="/about" className="nav-link">Birojs</Link>
+          <Link href="/about#team" className="nav-link">Par mums</Link>
           <MegaMenu />
-
-          <Link href="/careers">Karjera</Link>
-          <Link href="/insights">Ziņas</Link>
-          <Link href="/contact">Kontakti</Link>
-          <Link href="/misc">Citi</Link>
+          <Link href="/careers" className="nav-link">Karjera</Link>
+          <Link href="/insights" className="nav-link">Ziņas</Link>
+          <Link href="/contact" className="nav-link">Kontakti</Link>
+          <Link href="/misc" className="nav-link">Citi</Link>
         </nav>
 
-        {/* Labā puse – tālrunis/e-pasts paliek, “Sazināties” pogu vari atstāt/izņemt atbilstoši iepriekšējiem uzstādījumiem */}
-        <div className="hidden md:flex items-center gap-4 text-sm text-neutral-700">
+        <div className="hidden md:flex items-center gap-4 text-sm" style={{ color: "var(--brand)" }}>
           <a href="tel:+37120000000" className="rounded-full border border-neutral-200 px-3 py-1.5 hover:bg-neutral-50">
             +371 2000 0000
           </a>
           <span className="text-neutral-300">•</span>
-          <a href="mailto:info@rempe.lv" className="hover:underline">
+          <a href="mailto:info@rempe.lv" className="nav-link">
             info@rempe.lv
           </a>
         </div>
