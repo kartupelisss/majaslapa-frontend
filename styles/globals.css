@@ -288,3 +288,20 @@ footer .bg-neutral-900:hover, .site-footer .bg-neutral-900:hover {
   background: var(--accent) !important;
   color: var(--accent-foreground) !important;
 }
+/* === FIX: tumši zilām pogām baltā sekcijā piespiežam baltu tekstu === */
+:is(.bg-white, .surface, .rounded-2xl.bg-white, .rounded-3xl.bg-white, .surface-muted)
+  :where(.bg-neutral-900, .btn-primary) {
+  color: #fff !important;
+}
+
+/* arī linkiem/pogām ar .rounded-full + tumšo fonu */
+:is(.bg-white, .surface, .rounded-2xl.bg-white, .rounded-3xl.bg-white, .surface-muted)
+  :where(a.bg-neutral-900, button.bg-neutral-900) {
+  color: #fff !important;
+}
+
+/* hover: kad poga pāriet uz zeltu, teksts kļūst tumšs (lasāms) */
+:is(.bg-white, .surface, .rounded-2xl.bg-white, .rounded-3xl.bg-white, .surface-muted)
+  :where(.bg-neutral-900:hover, .btn-primary:hover) {
+  color: var(--accent-foreground) !important;
+}
