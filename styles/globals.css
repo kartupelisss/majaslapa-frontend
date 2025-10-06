@@ -305,3 +305,145 @@ footer .bg-neutral-900:hover, .site-footer .bg-neutral-900:hover {
   :where(.bg-neutral-900:hover, .btn-primary:hover) {
   color: var(--accent-foreground) !important;
 }
+/* ===== Deloitte-stila zilos “feature” blokus ===== */
+.card-slab {
+  background: linear-gradient(160deg, var(--brand) 0%, #2a3f6e 100%);
+  color: #fff;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 12px 24px rgba(0,0,0,.12);
+  transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.card-slab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 32px rgba(0,0,0,.18);
+  border-color: rgba(255,255,255,.32);
+}
+.card-slab-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: .5rem;
+  color: #fff;
+}
+.card-slab-text {
+  opacity: .95;
+  line-height: 1.6;
+  margin-bottom: .9rem;
+}
+.card-slab-cta {
+  display: inline-block;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: #fff;
+}
+.card-slab-cta:hover { opacity: .9; }
+
+/* === Deloitte-style service cards === */
+.service-card{
+  /* tumši zils → nedaudz gradienta dziļumam */
+  background: linear-gradient(180deg, rgba(29,45,80,0.98) 0%, rgba(29,45,80,0.92) 100%);
+  box-shadow: 0 6px 20px rgba(0,0,0,.18);
+  position: relative;
+  isolation: isolate; /* lai hover slānis paliek iekšā */
+}
+.service-card * { color:#fff; }
+.service-card__hover { opacity:0; }
+.service-card:hover .service-card__hover { opacity:1; }
+
+/* “Outline” info blokiem (ja izmanto zemāk lapā) — tīrs, premium izskats */
+.outline-box{
+  border:1px solid var(--line);
+  border-radius: 1rem;
+  background:#fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,.04);
+}
+.outline-box h3{
+  color: var(--brand);
+  font-weight: 700;
+}
+.outline-box ul li{ margin: .35rem 0; }
+
+/* Modālis: uzlabots animatīvs feel (bez bibliotekām) */
+@media (prefers-reduced-motion: no-preference){
+  .service-card{ transition: transform .2s ease, box-shadow .2s ease; }
+}
+
+/* === Service cards: virsraksti uz tumša fona paliek BALTI === */
+.service-card h1,
+.service-card h2,
+.service-card h3,
+.service-card .text-neutral-900,
+.service-card .text-neutral-800 {
+  color: #fff !important;
+}
+
+/* === Service cards: hover slānis tikai apakšā, ar plūdenu atsegumu === */
+.service-card { overflow: hidden; }
+
+/* “Veils” – viegls tumšs gradients no apakšas uz augšu */
+.service-card__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.35), rgba(0,0,0,0) 60%);
+  opacity: 0;
+  transition: opacity .2s ease;
+  z-index: 1; /* zem teksta (teksts ir z-10) */
+}
+
+/* Apakšējā hover kaste ar punktiem */
+.service-card__hover {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .2s ease, transform .2s ease;
+  z-index: 2; /* virs “veil”, zem virsraksta */
+}
+
+.service-card:hover .service-card__veil { opacity: 1; }
+.service-card:hover .service-card__hover { opacity: 1; transform: translateY(0); }
+
+/* === Service cards: virsraksti uz tumša fona paliek BALTI === */
+.service-card h1,
+.service-card h2,
+.service-card h3,
+.service-card .text-neutral-900,
+.service-card .text-neutral-800 {
+  color: #fff !important;
+}
+
+/* Kartes uzvedība un hover slāņu kontrole */
+.service-card { overflow: hidden; }
+
+/* “Veils” – viegls tumšs gradients no apakšas uz augšu */
+.service-card__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.35), rgba(0,0,0,0) 60%);
+  opacity: 0;
+  transition: opacity .2s ease;
+  z-index: 1; /* zem teksta un pogas (kas ir z-10) */
+}
+
+/* Apakšējā hover kaste — fiksēta virs pogas (nepārklāj!) */
+.service-card__hover {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* Noliekam virs pogas (~56–64px zona pogai) */
+  bottom: 64px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .2s ease, transform .2s ease;
+  z-index: 2; /* virs “veil”, zem teksta/pogas (teksts/poga ir z-10) */
+}
+
+/* Hover aktivizācija */
+.service-card:hover .service-card__veil { opacity: 1; }
+.service-card:hover .service-card__hover { opacity: 1; transform: translateY(0); }
+
+/* === Service cards: virsraksti vienmēr BALTI (pārraksta globālo h3 !important) === */
+.service-card-title { color: #fff !important; }
