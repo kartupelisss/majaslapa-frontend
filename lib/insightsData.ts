@@ -30,7 +30,7 @@ export async function getInsights(): Promise<Insight[]> {
   console.log("📡 Fetching Insights no:", url)
 
   try {
-    const res = await fetch(url, { next: { revalidate: 60 } })
+    const res = await fetch(url, { cache: 'no-store' })
 
     if (!res.ok) {
       console.error("❌ Neizdevās ielādēt Insights no Payload CMS:", res.statusText)
