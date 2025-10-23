@@ -19,14 +19,17 @@ export type Insight = {
   summary?: { item: string }[]
 }
 
+const BASE_URL =
+  process.env.NEXT_PUBLIC_PAYLOAD_URL || "https://majaslapa-ra7f.onrender.com"
+
 /**
  * Iegūst visus rakstus no Payload CMS (kolekcija "blog-posts")
  */
 export async function getInsights(): Promise<Insight[]> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/blog-posts?sort=-publishedDate`,
-    { next: { revalidate: 60 } }
-  )
+  const url = `${BASE_URL}/api/blog-posts?sort=-publishedDate`
+  console.log("📡 Fetching Insights no:", url)
+
+  const res = await fetch(url, { next: { revalidate: 60 } })
 
   if (!res.ok) {
     console.error("❌ Neizdevās ielādēt Insights no Payload CMS:", res.statusText)
@@ -34,7 +37,6 @@ export async function getInsights(): Promise<Insight[]> {
   }
 
   const data = (await res.json()) as { docs: Insight[] }
-  console.log("✅ Saņemti raksti no Payload CMS:", data.docs?.length || 0)
   return data.docs || []
 }
 
@@ -42,9 +44,10 @@ export async function getInsights(): Promise<Insight[]> {
  * Iegūst konkrētu rakstu pēc slug
  */
 export async function getInsightBySlug(slug: string): Promise<Insight | null> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/blog-posts?where[slug][equals]=${slug}`
-  )
+  const url = `${BASE_URL}/api/blog-posts?where[slug][equals]=${slug}`
+  console.log("📡 Fetching rakstu no:", url)
+
+  const res = await fetch(url)
 
   if (!res.ok) {
     console.error("❌ Neizdevās ielādēt rakstu:", res.statusText)
