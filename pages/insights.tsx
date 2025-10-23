@@ -1,18 +1,10 @@
 import Head from "next/head";
 import Link from "next/link";
-import { insights as INSIGHTS } from "@/lib/insightsData";
+import { getInsights, type Insight } from "@/lib/insightsData";
 
-type Insight = {
-  id?: string | number;
-  slug: string;
-  title: string;
-  excerpt?: string;
-  topic?: string;
-  date?: string;
-};
-
-export default function InsightsList() {
-  const items: Insight[] = (INSIGHTS ?? []) as Insight[];
+export default async function InsightsList() {
+  // Iegūstam visus rakstus no Payload CMS
+  const items: Insight[] = await getInsights();
 
   return (
     <>
@@ -37,8 +29,9 @@ export default function InsightsList() {
 
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((post) => {
-              const date =
-                post.date ? new Date(post.date).toLocaleDateString() : null;
+              const date = post.publishedDate
+                ? new Date(post.publishedDate).toLocaleDateString()
+                : null;
 
               return (
                 <article
@@ -46,8 +39,7 @@ export default function InsightsList() {
                   className="rounded-2xl border border-neutral-200 bg-white p-6 transition-shadow hover:shadow-sm"
                 >
                   <div className="text-xs text-neutral-500">
-                    {post.topic ?? "Temats"}
-                    {date ? ` • ${date}` : null}
+                    {date ? date : "—"}
                   </div>
 
                   <h3 className="mt-2 text-[17px] font-semibold leading-snug text-neutral-900 line-clamp-2">
