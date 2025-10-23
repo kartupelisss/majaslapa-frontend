@@ -3,7 +3,12 @@ import Head from "next/head";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { highlights } from "@/lib/highlights";
-import { insights } from "@/lib/insightsData"; // << īstajai News sekcijai
+import { getInsights, type Insight } from "@/lib/insightsData";
+
+export async function getStaticProps() {
+  const insights = await getInsights();
+  return { props: { insights } };
+}
 
 type Item = { slug: string; title: string };
 
@@ -200,7 +205,7 @@ function LeftList({
 }
 
 // ------------------ Lapa ------------------
-export default function Home() {
+export default function Home({ insights }: { insights: Insight[] }) {
   const [tab, setTab] = useState<"pakalpojumi" | "klienti">("pakalpojumi");
   const items = tab === "pakalpojumi" ? SERVICE_ITEMS : CLIENT_ITEMS;
 
@@ -412,33 +417,48 @@ export default function Home() {
             </div>
 
             {(() => {
-              const items = [...insights].sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 3);
-              if (items.length === 0) return null;
+              const items = [...(insights || [])]
+    .filter((a) => a.publishedDate)
+    .sort(
+      (a, b) =>
+        new Date(b.publishedDate || 0).getTime() -
+        new Date(a.publishedDate || 0).getTime()
+    )
+    .slice(0, 3);
 
-              return (
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {items.map((post) => (
-                    <article key={post.slug} className="rounded-2xl border border-neutral-200 bg-white p-6">
-                      <div className="text-xs text-neutral-500">
-                        {new Date(post.date).toLocaleDateString()}
-                      </div>
-                      <h3 className="mt-2 text-[17px] font-semibold leading-snug text-neutral-900 line-clamp-2">
-                        {post.title}
-                      </h3>
-                      {post.excerpt && (
-                        <p className="mt-2 text-sm text-neutral-600 line-clamp-3">{post.excerpt}</p>
-                      )}
-                      <Link
-                        href={`/insights/${post.slug}`}
-                        className="mt-4 inline-block text-sm underline underline-offset-4"
-                      >
-                        Lasīt vairāk
-                      </Link>
-                    </article>
-                  ))}
-                </div>
-              );
-            })()}
+  if (items.length === 0) return null;
+
+  return (
+    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+      {items.map((post) => (
+        <article
+          key={post.slug}
+          className="rounded-2xl border border-neutral-200 bg-white p-6"
+        >
+          <div className="text-xs text-neutral-500">
+            {post.publishedDate
+              ? new Date(post.publishedDate).toLocaleDateString()
+              : ""}
+          </div>
+          <h3 className="mt-2 text-[17px] font-semibold leading-snug text-neutral-900 line-clamp-2">
+            {post.title}
+          </h3>
+          {post.excerpt && (
+            <p className="mt-2 text-sm text-neutral-600 line-clamp-3">
+              {post.excerpt}
+            </p>
+          )}
+          <Link
+            href={`/insights/${post.slug}`}
+            className="mt-4 inline-block text-sm underline underline-offset-4"
+          >
+            Lasīt vairāk
+          </Link>
+        </article>
+      ))}
+    </div>
+  );
+})()}
           </div>
         </section>
 
