@@ -1,9 +1,13 @@
 import Link from "next/link";
-import { insights } from "@/lib/insightsData";
+import { getInsights, type Insight } from "@/lib/insightsData";
 
-export default function NewsSection() {
+export default async function NewsSection() {
+  // Ielādē rakstus no Payload CMS
+  const insights: Insight[] = await getInsights();
+
+  // Atlasām jaunākos trīs
   const items = [...insights]
-    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .sort((a, b) => (a.publishedDate < b.publishedDate ? 1 : -1))
     .slice(0, 3);
 
   if (items.length === 0) return null;
@@ -34,7 +38,7 @@ export default function NewsSection() {
             className="rounded-2xl border border-neutral-200 bg-white p-6 transition-shadow hover:shadow-sm"
           >
             <div className="text-xs text-neutral-500">
-              {new Date(post.date).toLocaleDateString()}
+              {new Date(post.publishedDate).toLocaleDateString()}
             </div>
 
             <h3 className="mt-2 text-[17px] font-semibold leading-snug text-neutral-900 line-clamp-2">
