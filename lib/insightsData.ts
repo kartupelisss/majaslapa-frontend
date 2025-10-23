@@ -20,11 +20,11 @@ export type Insight = {
 }
 
 /**
- * Iegūst visus rakstus no Payload CMS
+ * Iegūst visus rakstus no Payload CMS (kolekcija "Insights raksti")
  */
 export async function getInsights(): Promise<Insight[]> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/blog-posts?sort=-publishedDate`,
+    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/insights-raksti?sort=-publishedDate`,
     { next: { revalidate: 60 } }
   )
 
@@ -42,7 +42,7 @@ export async function getInsights(): Promise<Insight[]> {
  */
 export async function getInsightBySlug(slug: string): Promise<Insight | null> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/blog-posts?where[slug][equals]=${slug}`
+    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/insights-raksti?where[slug][equals]=${slug}`
   )
 
   if (!res.ok) return null
