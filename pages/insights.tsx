@@ -3,13 +3,12 @@ import Link from "next/link";
 import { getInsights, type Insight } from "@/lib/insightsData";
 
 export default async function InsightsList() {
-  // Iegūstam visus rakstus no Payload CMS
   const items: Insight[] = await getInsights();
 
   return (
     <>
       <Head>
-        <title>Insights — REMPE</title>
+        <title>Jaunākās ziņas — REMPE</title>
         <meta
           name="description"
           content="Īsi skaidrojumi un analīze par aktuālajiem nodokļu tematiem."
@@ -20,7 +19,7 @@ export default async function InsightsList() {
         <section className="mx-auto max-w-7xl px-6 py-12 md:py-16">
           <div className="max-w-3xl">
             <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-neutral-900">
-              Insights
+              Jaunākās ziņas
             </h1>
             <p className="mt-2 text-neutral-600">
               Īsi skaidrojumi un analīze par aktuālajiem nodokļu tematiem.
@@ -28,9 +27,15 @@ export default async function InsightsList() {
           </div>
 
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {items.length === 0 && (
+              <p className="text-neutral-500 text-sm">
+                🔍 Nav atrasts neviens raksts.
+              </p>
+            )}
+
             {items.map((post) => {
               const date = post.publishedDate
-                ? new Date(post.publishedDate).toLocaleDateString()
+                ? new Date(post.publishedDate).toLocaleDateString("lv-LV")
                 : null;
 
               return (
