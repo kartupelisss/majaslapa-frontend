@@ -411,9 +411,11 @@ export default function Home({ insights }: { insights: Insight[] }) {
                   Īsas piezīmes par regulējumu, praksi un spriedumiem.
                 </p>
               </div>
-              <Link href="/insights" className="text-sm underline underline-offset-4">
-                Skatīt visas ziņas →
-              </Link>
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+<a href="/insights" className="text-sm underline underline-offset-4">
+  Skatīt visas ziņas →
+</a>
+
             </div>
 
             {(() => {

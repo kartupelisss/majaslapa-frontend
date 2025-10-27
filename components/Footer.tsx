@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="md:col-span-3">
             <Link href="/" aria-label="Sākums">
               <Image
-                src="/brand/logo-rempe.jpg" // <- ja vajag, nomaini uz savu ceļu
+                src="/brand/logo-rempe.jpg"
                 alt="REMPE"
                 width={160}
                 height={40}
@@ -43,6 +43,7 @@ export default function Footer() {
               </Link>
 
               <div className="mt-4 flex items-center gap-4 md:mt-0">
+                {/* LinkedIn */}
                 <Link
                   href="https://www.linkedin.com/"
                   target="_blank"
@@ -50,7 +51,6 @@ export default function Footer() {
                   aria-label="LinkedIn"
                   className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20 transition hover:bg-white/20"
                 >
-                  {/* LinkedIn icon */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -61,6 +61,7 @@ export default function Footer() {
                   </svg>
                 </Link>
 
+                {/* Facebook */}
                 <Link
                   href="https://www.facebook.com/"
                   target="_blank"
@@ -68,7 +69,6 @@ export default function Footer() {
                   aria-label="Facebook"
                   className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20 transition hover:bg-white/20"
                 >
-                  {/* Facebook icon */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -90,7 +90,7 @@ export default function Footer() {
               Tieši Jums!
             </p>
             <Link
-              href="/subscribe"
+              href="/contact"
               className="mt-3 inline-flex items-center justify-center rounded-full bg-white px-5 py-2 text-sm font-semibold text-[#005BBB] transition hover:bg-white/90"
             >
               PIERAKSTĪTIES

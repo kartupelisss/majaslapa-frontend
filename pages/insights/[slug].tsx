@@ -47,9 +47,11 @@ export default function InsightPage({ insight }: Props) {
           </p>
         ))}
 
-        <Link href="/insights" className="text-blue-600 underline mt-6 block">
-          ← Atpakaļ uz rakstiem
-        </Link>
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+<a href="/insights" className="text-blue-600 underline mt-6 block">
+  ← Atpakaļ uz rakstiem
+</a>
+
       </article>
     </>
   );
