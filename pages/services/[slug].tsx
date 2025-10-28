@@ -1,35 +1,59 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { GetServerSideProps } from "next";
-import { getPageBySlug } from "@/lib/getPageBySlug";
-import { renderBlocks } from "@/components//RenderBlocks";
+import { renderBlocks } from "@/components/RenderBlocks";
 
-export default function ServicePage({ page }: any) {
-  if (!page) return <div>Lapa nav atrasta</div>;
+type ServicePageProps = {
+  params: {
+    slug: string;
+  };
+};
 
+export default async function ServicePage({ params }: ServicePageProps) {
+  // --- Datu ielāde no Payload ---
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/services/${params.slug}`,
+    { cache: "no-store" } // lai vienmēr rāda jaunāko saturu
+  );
+
+  if (!res.ok) {
+    console.error("Neizdevās ielādēt datus no Payload:", res.status);
+    return <div>Kļūda ielādējot pakalpojumu.</div>;
+  }
+
+  const data = await res.json();
+  const service = data?.doc;
+
+  // --- Renderēšana ---
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* === HERO === */}
-      <section className="bg-gradient-to-b from-[#0a2149] to-[#163b73] text-white py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <p className="uppercase tracking-wider text-xs mb-3 opacity-70">Pakalpojumi</p>
-          <h1 className="text-4xl font-bold mb-6">{page.heroTitle}</h1>
-          <div
-            className="text-white/90 space-y-4"
-            dangerouslySetInnerHTML={{ __html: page.heroDescription }}
-          />
+      {/* === HERO SEKCIJA === */}
+      <section
+        className="relative overflow-hidden"
+        style={{
+          background: "linear-gradient(180deg, #0a2149 0%, #163b73 100%)",
+        }}
+      >
+        <div className="relative mx-auto max-w-7xl px-6 py-20 lg:py-28">
+          <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-blue-100">
+            Pakalpojumi
+          </p>
+
+          <h1 className="mt-6 text-4xl font-bold leading-tight text-white lg:text-5xl xl:text-6xl">
+            {service?.heroVirsraksts || service?.nosaukums}
+          </h1>
+
+          {service?.heroApraksts && (
+            <div className="mt-8 max-w-3xl space-y-6 text-white/90 whitespace-pre-line">
+              {service.heroApraksts.split("\n\n").map((p: string, i: number) => (
+                <p key={i}>{p}</p>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* === BLOKI NO CMS === */}
-      <main className="max-w-6xl mx-auto px-6 py-16 space-y-20">
-        {renderBlocks(page.saturaBloki)}
-      </main>
+      {/* === DINAMISKIE BLOKI NO PAYLOAD === */}
+      <section className="mx-auto max-w-7xl px-6 py-16">
+        {renderBlocks(service?.saturaBloki)}
+      </section>
     </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const slug = context.params?.slug as string;
-  const page = await getPageBySlug(slug, "pakalpojumi");
-  return { props: { page } };
-};
