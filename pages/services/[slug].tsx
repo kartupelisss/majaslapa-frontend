@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { renderBlocks } from "@/components/RenderBlocks";
 
 type ServiceDoc = {
