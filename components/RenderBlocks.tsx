@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from "next/link";
+import { serializePayloadRichText } from "@/lib/serializePayloadRichText";
+
 
 export const renderBlocks = (blocks: any[] = []) => {
   if (!blocks || blocks.length === 0) return null;
@@ -18,7 +20,10 @@ export const renderBlocks = (blocks: any[] = []) => {
             {block.saturs && (
               <div
                 className="prose max-w-none text-muted-foreground"
-                dangerouslySetInnerHTML={{ __html: block.saturs }}
+                dangerouslySetInnerHTML={{ __html: serializePayloadRichText(block.saturs) }}
+
+
+
               />
             )}
           </section>
