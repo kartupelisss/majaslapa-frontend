@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { serializePayloadRichText } from "@/lib/serializePayloadRichText";
 
-
 export const renderBlocks = (blocks: any[] = []) => {
   if (!blocks || blocks.length === 0) return null;
 
@@ -20,21 +19,20 @@ export const renderBlocks = (blocks: any[] = []) => {
             {block.saturs && (
               <div
                 className="prose max-w-none text-muted-foreground"
-                dangerouslySetInnerHTML={{ __html: serializePayloadRichText(block.saturs) }}
-
-
-
+                dangerouslySetInnerHTML={{
+                  __html: serializePayloadRichText(block.saturs),
+                }}
               />
             )}
           </section>
         );
 
       // 🟩 2. Kartīšu režģis
-      case "kartisu-rezgis":
+      case "kartisu-rezigs":
         return (
-          <section key={i}>
+          <section key={i} className="space-y-8">
             {block.virsraksts && (
-              <h2 className="text-2xl font-bold mb-8">{block.virsraksts}</h2>
+              <h2 className="text-2xl font-bold mb-6">{block.virsraksts}</h2>
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {block.kartites?.map((card: any, idx: number) => (
@@ -42,14 +40,18 @@ export const renderBlocks = (blocks: any[] = []) => {
                   key={idx}
                   className="p-6 border rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow"
                 >
-                  <h3 className="text-lg font-semibold mb-2">{card.virsraksts}</h3>
+                  <h3 className="text-lg font-semibold mb-2">
+                    {card.virsraksts}
+                  </h3>
                   {card.apraksts && (
-                    <p className="text-sm mb-3 text-gray-600">{card.apraksts}</p>
+                    <p className="text-sm mb-3 text-gray-600">
+                      {card.apraksts}
+                    </p>
                   )}
                   {card.punkti?.length > 0 && (
                     <ul className="list-disc list-inside text-sm text-gray-700 mb-4">
                       {card.punkti.map((p: any, j: number) => (
-                        <li key={j}>{p.punktaTeksts}</li>
+                        <li key={j}>{p.teksts}</li>
                       ))}
                     </ul>
                   )}

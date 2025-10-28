@@ -2,7 +2,6 @@
 
 // lib/serializePayloadRichText.ts
 
-// HTML escapings — aizsardzībai pret XSS
 function esc(s: string): string {
   return s
     .replace(/&/g, "&amp;")
@@ -12,19 +11,20 @@ function esc(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
-// Teksta mezglu pārveidošana (tiek izmantota visur)
 function textFromNode(node: any): string {
   if (!node) return "";
 
-  // Vienkāršs teksta mezgls
-  if (typeof node.text === "string") return esc(node.text);
+  // Ja ir "text" mezgls
+  if (node.type === "text" && typeof node.text === "string") {
+    return esc(node.text);
+  }
 
-  // Lexical gadījums: type: "text", content: "..."
+  // Ja ir "content" lauks
   if (node.type === "text" && typeof node.content === "string") {
     return esc(node.content);
   }
 
-  // Ja ir bērni (nested struktūra)
+  // Ja ir bērni
   if (Array.isArray(node.children)) {
     return node.children.map(textFromNode).join("");
   }
@@ -32,46 +32,55 @@ function textFromNode(node: any): string {
   return "";
 }
 
-// Galvenā funkcija, kas katru mezglu pārveido HTML
 function nodeToHTML(node: any): string {
   if (!node) return "";
 
   switch (node.type) {
     case "paragraph":
-      return `<p>${(node.children || []).map(textFromNode).join("")}</p>`;
+      return `<p>${(node.children || []).map(nodeToHTML).join("")}</p>`;
 
     case "heading": {
       const level = node.tag || node.level || 2;
-      const inner = (node.children || []).map(textFromNode).join("");
+      const inner = (node.children || []).map(nodeToHTML).join("");
       return `<h${level}>${inner}</h${level}>`;
     }
 
-    case "list": {
+    case "list":
+      // ✅ Payload Lexical “listType”: "bullet" vai "number"
       const isOrdered =
-        node.listType === "number" || node.format === "number" || node.tag === "ol";
+        node.listType === "number" ||
+        node.format === "number" ||
+        node.tag === "ol";
       const tag = isOrdered ? "ol" : "ul";
-      const inner = (node.children || []).map(nodeToHTML).join("");
-      return `<${tag}>${inner}</${tag}>`;
-    }
+      const innerList = (node.children || []).map(nodeToHTML).join("");
+      return `<${tag}>${innerList}</${tag}>`;
 
     case "listitem":
     case "list-item":
-      return `<li>${(node.children || []).map(nodeToHTML).join("")}</li>`;
-
-    case "quote":
-      return `<blockquote>${(node.children || []).map(nodeToHTML).join("")}</blockquote>`;
+      // ✅ Katrs saraksta punkts
+      const itemContent = (node.children || [])
+        .map((child: any) =>
+          child.type === "text" ? textFromNode(child) : nodeToHTML(child)
+        )
+        .join("");
+      return `<li>${itemContent}</li>`;
 
     case "link": {
       const url = esc(node.fields?.url || node.url || "#");
-      const inner =
-        (node.children || []).map(textFromNode).join("") ||
-        (node.children || []).map(nodeToHTML).join("");
+      const inner = (node.children || []).map(nodeToHTML).join("");
       const rel = url.startsWith("http") ? ` rel="noopener noreferrer"` : "";
       const target = url.startsWith("http") ? ` target="_blank"` : "";
       return `<a href="${url}"${rel}${target}>${inner}</a>`;
     }
 
-    // Nezināms tips — mēģinām izdrukāt bērnus
+    case "quote":
+      return `<blockquote>${(node.children || [])
+        .map(nodeToHTML)
+        .join("")}</blockquote>`;
+
+    case "text":
+      return esc(node.text || "");
+
     default:
       if (Array.isArray(node.children)) {
         return node.children.map(nodeToHTML).join("");
@@ -80,11 +89,13 @@ function nodeToHTML(node: any): string {
   }
 }
 
-// Publiskā funkcija, ko importē RenderBlocks u.c.
 export function serializePayloadRichText(value: any): string {
   if (!value) return "";
 
-  // Payload richText glabājas kā Lexical root
-  const nodes = value?.root?.children || value?.children || [];
+  const nodes =
+    value?.root?.children ||
+    value?.children ||
+    (Array.isArray(value) ? value : []);
+
   return nodes.map(nodeToHTML).join("");
 }
