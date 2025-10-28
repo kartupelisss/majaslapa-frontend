@@ -1,6 +1,8 @@
-// lib/serializePayloadRichText.ts
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 
+// lib/serializePayloadRichText.ts
+
+// HTML escapings — aizsardzībai pret XSS
 function esc(s: string): string {
   return s
     .replace(/&/g, "&amp;")
@@ -10,24 +12,36 @@ function esc(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
+// Teksta mezglu pārveidošana (tiek izmantota visur)
 function textFromNode(node: any): string {
   if (!node) return "";
+
+  // Vienkāršs teksta mezgls
   if (typeof node.text === "string") return esc(node.text);
-  if (Array.isArray(node.children)) return node.children.map(textFromNode).join("");
+
+  // Lexical gadījums: type: "text", content: "..."
+  if (node.type === "text" && typeof node.content === "string") {
+    return esc(node.content);
+  }
+
+  // Ja ir bērni (nested struktūra)
+  if (Array.isArray(node.children)) {
+    return node.children.map(textFromNode).join("");
+  }
+
   return "";
 }
 
+// Galvenā funkcija, kas katru mezglu pārveido HTML
 function nodeToHTML(node: any): string {
   if (!node) return "";
-
-  const kids = (node.children || []).map(nodeToHTML).join("");
 
   switch (node.type) {
     case "paragraph":
       return `<p>${(node.children || []).map(textFromNode).join("")}</p>`;
 
     case "heading": {
-      const level = node.tag || node.level || 2; // Lexical dažādās shēmās
+      const level = node.tag || node.level || 2;
       const inner = (node.children || []).map(textFromNode).join("");
       return `<h${level}>${inner}</h${level}>`;
     }
@@ -41,6 +55,7 @@ function nodeToHTML(node: any): string {
     }
 
     case "listitem":
+    case "list-item":
       return `<li>${(node.children || []).map(nodeToHTML).join("")}</li>`;
 
     case "quote":
@@ -56,15 +71,20 @@ function nodeToHTML(node: any): string {
       return `<a href="${url}"${rel}${target}>${inner}</a>`;
     }
 
+    // Nezināms tips — mēģinām izdrukāt bērnus
     default:
-      // noklusēti – ieliekam bērnus (lai neizkristu saturs)
-      if (Array.isArray(node.children)) return node.children.map(nodeToHTML).join("");
+      if (Array.isArray(node.children)) {
+        return node.children.map(nodeToHTML).join("");
+      }
       return "";
   }
 }
 
+// Publiskā funkcija, ko importē RenderBlocks u.c.
 export function serializePayloadRichText(value: any): string {
   if (!value) return "";
-  const nodes = value?.root?.children || [];
+
+  // Payload richText glabājas kā Lexical root
+  const nodes = value?.root?.children || value?.children || [];
   return nodes.map(nodeToHTML).join("");
 }
