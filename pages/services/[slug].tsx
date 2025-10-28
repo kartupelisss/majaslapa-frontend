@@ -188,3 +188,4 @@ export default function ServicePage({ service }: { service: ServiceDoc }) {
     </div>
   );
 }
+export const dynamic = "force-dynamic";
